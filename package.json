@@ -9,8 +9,21 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@elrondnetwork/erdjs": "^11.1.2",
+    "@elrondnetwork/erdjs-network-providers": "^1.2.0",
+    "@walletconnect/client": "^1.8.0",
+    "@walletconnect/react-native-compat": "^2.9.0",
+    "@walletconnect/sign-client": "^2.9.0",
+    "@walletconnect/types": "^2.9.0",
+    "@walletconnect/utils": "^2.9.0",
+    "axios": "^1.4.0",
+    "big-integer": "^1.6.51",
+    "crypto-js": "^4.1.1",
     "react": "18.2.0",
-    "react-native": "0.71.8"
+    "react-native": "0.71.8",
+    "react-redux": "8.0.2",
+    "redux": "4.2.0",
+    "redux-persist": "6.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
