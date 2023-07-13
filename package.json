@@ -28,7 +28,6 @@
   "devDependencies": {
     "@babel/core": "^7.20.0"
   },
-  "private": true,
   "description": "The library connects the app to the MultiversX's xPortal mobile wallet.",
   "keywords": [
     "react",
@@ -38,5 +37,5 @@
     "wallet"
   ],
   "author": "sash20m",
-  "license": "ISC"
+  "license": "MIT"
 }
