@@ -32,8 +32,12 @@ export const connectionConfigSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(resetOnLogout, () => {
-      return initialState;
+    builder.addCase(resetOnLogout, (state: ConnectionConfigSlice) => {
+      return {
+        ...initialState,
+        chain: state.chain,
+        projectId: state.projectId,
+      };
     });
   },
 });

@@ -7,13 +7,13 @@ import connectionConfigReducer, {
 } from './slices/connectionConfig.slice';
 
 export interface ReduxStateSlices {
-  wallet: WalletSlice;
-  connectionConfig: ConnectionConfigSlice;
+  walletSlice: WalletSlice;
+  connectionConfigSlice: ConnectionConfigSlice;
 }
 
 const reducers = combineReducers({
-  wallet: walletReducer,
-  connectionConfig: connectionConfigReducer,
+  walletSlice: walletReducer,
+  connectionConfigSlice: connectionConfigReducer,
 });
 
 const persistConfig = {

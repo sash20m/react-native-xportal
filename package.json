@@ -11,6 +11,7 @@
   "dependencies": {
     "@elrondnetwork/erdjs": "^11.1.2",
     "@elrondnetwork/erdjs-network-providers": "^1.2.0",
+    "@multiversx/sdk-core": "^12.6.0",
     "@react-native-async-storage/async-storage": "^1.19.0",
     "@reduxjs/toolkit": "^1.9.5",
     "@walletconnect/client": "^1.8.0",
@@ -29,7 +30,10 @@
   "devDependencies": {
     "@babel/core": "^7.20.0"
   },
-  "description": "The library connects the app to the MultiversX's xPortal mobile wallet.",
+  "peerDependencies": {
+    "@multiversx/sdk-core": ">= 12.1.0"
+  },
+  "description": "A library that connects the mobile app to the MultiversX's xPortal mobile wallet.",
   "keywords": [
     "react",
     "native",
