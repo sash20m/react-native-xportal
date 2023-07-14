@@ -11,6 +11,8 @@
   "dependencies": {
     "@elrondnetwork/erdjs": "^11.1.2",
     "@elrondnetwork/erdjs-network-providers": "^1.2.0",
+    "@react-native-async-storage/async-storage": "^1.19.0",
+    "@reduxjs/toolkit": "^1.9.5",
     "@walletconnect/client": "^1.8.0",
     "@walletconnect/react-native-compat": "^2.9.0",
     "@walletconnect/sign-client": "^2.9.0",
@@ -22,7 +24,6 @@
     "react": "18.2.0",
     "react-native": "0.71.8",
     "react-redux": "8.0.2",
-    "redux": "4.2.0",
     "redux-persist": "6.0.0"
   },
   "devDependencies": {
