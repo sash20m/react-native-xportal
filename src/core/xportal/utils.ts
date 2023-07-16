@@ -9,7 +9,7 @@ import {
   WALLETCONNECT_MULTIVERSX_METHODS,
   WALLETCONNECT_MULTIVERSX_NAMESPACE,
 } from './constants';
-import {WalletConnectV2ProviderErrorMessagesEnum} from './errors';
+import {WalletConnectProviderErrorMessagesEnum} from './errors';
 import {Logger} from './logger';
 import {OptionalOperation} from './operation';
 
@@ -32,7 +32,7 @@ export function getCurrentSession(
   client?: Client,
 ): SessionTypes.Struct {
   if (!client) {
-    throw new Error(WalletConnectV2ProviderErrorMessagesEnum.notInitialized);
+    throw new Error(WalletConnectProviderErrorMessagesEnum.notInitialized);
   }
 
   const acknowledgedSessions = client
@@ -53,8 +53,8 @@ export function getCurrentSession(
     return session;
   }
 
-  Logger.error(WalletConnectV2ProviderErrorMessagesEnum.sessionNotConnected);
-  throw new Error(WalletConnectV2ProviderErrorMessagesEnum.sessionNotConnected);
+  Logger.error(WalletConnectProviderErrorMessagesEnum.sessionNotConnected);
+  throw new Error(WalletConnectProviderErrorMessagesEnum.sessionNotConnected);
 }
 
 export function getCurrentTopic(
@@ -62,14 +62,12 @@ export function getCurrentTopic(
   client?: Client,
 ): SessionTypes.Struct['topic'] {
   if (!client) {
-    throw new Error(WalletConnectV2ProviderErrorMessagesEnum.notInitialized);
+    throw new Error(WalletConnectProviderErrorMessagesEnum.notInitialized);
   }
 
   const session = getCurrentSession(chainId, client);
   if (!session?.topic) {
-    throw new Error(
-      WalletConnectV2ProviderErrorMessagesEnum.sessionNotConnected,
-    );
+    throw new Error(WalletConnectProviderErrorMessagesEnum.sessionNotConnected);
   }
 
   return session.topic;
@@ -133,10 +131,10 @@ export function applyTransactionSignature({
 }): Transaction {
   if (!response) {
     Logger.error(
-      WalletConnectV2ProviderErrorMessagesEnum.invalidTransactionResponse,
+      WalletConnectProviderErrorMessagesEnum.invalidTransactionResponse,
     );
     throw new Error(
-      WalletConnectV2ProviderErrorMessagesEnum.invalidTransactionResponse,
+      WalletConnectProviderErrorMessagesEnum.invalidTransactionResponse,
     );
   }
 
@@ -144,8 +142,8 @@ export function applyTransactionSignature({
   const transactionGuardian = transaction.getGuardian().bech32();
 
   if (transactionGuardian && transactionGuardian !== guardian) {
-    Logger.error(WalletConnectV2ProviderErrorMessagesEnum.invalidGuardian);
-    throw new Error(WalletConnectV2ProviderErrorMessagesEnum.invalidGuardian);
+    Logger.error(WalletConnectProviderErrorMessagesEnum.invalidGuardian);
+    throw new Error(WalletConnectProviderErrorMessagesEnum.invalidGuardian);
   }
 
   if (guardian) {

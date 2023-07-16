@@ -1,2 +1,1 @@
-const a = 5;
-export default a;
+export * from './src/wrappers/xPortalProvider';

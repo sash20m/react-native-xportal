@@ -873,6 +873,15 @@
   dependencies:
     bech32 "^2.0.0"
 
+"@multiversx/sdk-wallet-connect-provider@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@multiversx/sdk-wallet-connect-provider/-/sdk-wallet-connect-provider-4.0.2.tgz#e127aaa53612bc0dbc38aeb77b48681b18244b5d"
+  integrity sha512-WGim7kD49N5LoWestdmvxBYeJEDCevJv50Gt/RFBtZoWT3OyDoWu2wotVNssjPW0UQ5EyYPae96g+6FNHrXsxw==
+  dependencies:
+    "@walletconnect/sign-client" "2.9.0"
+    "@walletconnect/utils" "2.9.0"
+    bech32 "1.1.4"
+
 "@nicolo-ribaudo/semver-v6@^6.3.3":
   version "6.3.3"
   resolved "https://registry.yarnpkg.com/@nicolo-ribaudo/semver-v6/-/semver-v6-6.3.3.tgz#ea6d23ade78a325f7a52750aab1526b02b628c29"
@@ -1608,7 +1617,7 @@
   dependencies:
     tslib "1.14.1"
 
-"@walletconnect/sign-client@^2.9.0":
+"@walletconnect/sign-client@2.9.0", "@walletconnect/sign-client@^2.9.0":
   version "2.9.0"
   resolved "https://registry.yarnpkg.com/@walletconnect/sign-client/-/sign-client-2.9.0.tgz#fd3b0acb68bc8d56350f01ed70f8c6326e6e89fa"
   integrity sha512-mEKc4LlLMebCe45qzqh+MX4ilQK4kOEBzLY6YJpG8EhyT45eX4JMNA7qQoYa9MRMaaVb/7USJcc4e3ZrjZvQmA==

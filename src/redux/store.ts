@@ -4,6 +4,10 @@ import indexReducer from './index.reducer';
 
 export const Store = configureStore({
   reducer: indexReducer,
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 const StorePersist = persistStore(Store);

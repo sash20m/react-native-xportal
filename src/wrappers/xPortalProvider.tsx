@@ -8,19 +8,31 @@ import {ChainEnum} from '../types';
 export interface ProviderProps {
   onLogin?: () => any;
   onLogout?: () => any;
-  chain: ChainEnum;
+  chain: 'mainnet' | 'testnet' | 'devnet' | ChainEnum;
   projectId: string;
   children?: React.ReactNode | ReactElement;
 }
 
-const xPortalProvider = ({children, ...props}: ProviderProps) => {
+const XPortalProvider = ({
+  onLogin,
+  onLogout,
+  chain,
+  projectId,
+  children,
+}: ProviderProps) => {
   return (
     <Provider store={Store}>
       <PersistGate loading={null} persistor={StorePersist}>
-        <ProviderInitializer {...props}>{children}</ProviderInitializer>
+        <ProviderInitializer
+          onLogin={onLogin}
+          onLogout={onLogout}
+          chain={chain}
+          projectId={projectId}>
+          {children}
+        </ProviderInitializer>
       </PersistGate>
     </Provider>
   );
 };
 
-export default xPortalProvider;
+export {XPortalProvider};
