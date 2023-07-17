@@ -1,10 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {combineReducers} from '@reduxjs/toolkit';
 import {persistReducer} from 'redux-persist';
 import walletReducer, {WalletSlice} from './slices/wallet.slice';
 import connectionConfigReducer, {
   ConnectionConfigSlice,
 } from './slices/connectionConfig.slice';
+import {combineReducers} from 'redux';
 
 export interface ReduxStateSlices {
   walletSlice: WalletSlice;
@@ -21,4 +21,4 @@ const persistConfig = {
   storage: AsyncStorage,
 };
 
-export default persistReducer(persistConfig, reducers);
+export default persistReducer(persistConfig, reducers); //this is indexReducer

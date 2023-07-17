@@ -1,15 +1,33 @@
 import {configureStore} from '@reduxjs/toolkit';
-import {persistStore} from 'redux-persist';
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+  persistStore,
+} from 'redux-persist';
 import indexReducer from './index.reducer';
+import {createSubscription} from 'react-redux/es/utils/Subscription';
 
-export const Store = configureStore({
+export const store = configureStore({
   reducer: indexReducer,
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
-      serializableCheck: false,
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
     }),
 });
 
-const StorePersist = persistStore(Store);
+export const subscription = createSubscription(store);
+
+const StorePersist = persistStore(store);
+
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type RootState = ReturnType<typeof store.getState>;
+// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+export type AppDispatch = typeof store.dispatch;
 
 export default StorePersist;
