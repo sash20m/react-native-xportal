@@ -48,9 +48,9 @@ class XPortal {
       options,
     );
 
-    // await connectionProvider.init();
+    await connectionProvider.init();
 
-    // setWalletConnectProvider(connectionProvider);
+    setWalletConnectProvider(connectionProvider);
 
     return true;
   }
