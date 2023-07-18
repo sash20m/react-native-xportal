@@ -19,16 +19,16 @@ export const connectionConfigSlice = createSlice({
       state: ConnectionConfigSlice,
       action: PayloadAction<ConnectionConfigSlice>,
     ) => {
-      state = action.payload;
+      return action.payload;
     },
     updateConnectionConfig: (
       state: ConnectionConfigSlice,
       action: PayloadAction<ConnectionConfigSlice>,
     ) => {
-      state = {...state, ...action.payload};
+      return {...state, ...action.payload};
     },
     resetConnectionConfig: (state: ConnectionConfigSlice) => {
-      state = initialState;
+      return initialState;
     },
   },
   extraReducers: builder => {

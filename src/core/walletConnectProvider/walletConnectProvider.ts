@@ -62,7 +62,7 @@ export class WalletConnectProvider {
   processingTopic: string = '';
   options: SignClientTypes.Options | undefined = {};
 
-  private onClientConnect: IClientConnect;
+  onClientConnect: IClientConnect;
 
   constructor(
     onClientConnect: IClientConnect,
@@ -78,7 +78,7 @@ export class WalletConnectProvider {
     this.options = options;
   }
 
-  private reset() {
+  reset() {
     this.address = '';
     this.signature = '';
     this.walletConnector = undefined;

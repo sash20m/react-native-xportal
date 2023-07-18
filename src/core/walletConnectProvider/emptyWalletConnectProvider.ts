@@ -1,12 +1,47 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {SignableMessage, Transaction} from '@multiversx/sdk-core';
-import {EngineTypes} from '@multiversx/sdk-wallet-connect-provider';
+import {
+  EngineTypes,
+  PairingTypes,
+  SessionEventTypes,
+  SessionTypes,
+} from '@multiversx/sdk-wallet-connect-provider';
 import {ConnectionProvider} from '../types/connectionProvider.types';
+import {
+  ConnectParamsTypes,
+  WalletConnectProvider,
+} from './walletConnectProvider';
+import Client from '@walletconnect/sign-client';
 
 const notInitializedError = (caller: string) => {
   return `Unable to perform ${caller}. Connection provider not initialized`;
 };
 
-export class EmptyProvider implements ConnectionProvider {
+interface IClientConnect {
+  onClientLogin: () => void;
+  onClientLogout(): void;
+  onClientEvent: (event: SessionEventTypes['event']) => void;
+}
+
+export class EmptyProvider {
+  walletConnectRelay = '';
+  walletConnectProjectId = '';
+  chainId: string = '';
+  address: string = '';
+  signature: string = '';
+  isInitializing: boolean = false;
+  walletConnector: undefined;
+  session: undefined;
+  pairings: undefined;
+  processingTopic: string = '';
+  options: undefined;
+
+  onClientConnect: IClientConnect | any = {};
+
+  reset() {
+    this.address = '';
+  }
+
   init(): Promise<boolean> {
     return Promise.resolve(false);
   }
@@ -21,6 +56,13 @@ export class EmptyProvider implements ConnectionProvider {
     options?: TOptions,
   ): Promise<TResponse> {
     throw new Error(notInitializedError(`logout with options: ${options}`));
+  }
+
+  async connect(options?: ConnectParamsTypes): Promise<{
+    uri?: string;
+    approval: () => Promise<SessionTypes.Struct>;
+  }> {
+    throw new Error(notInitializedError(`connect with options: ${options}`));
   }
 
   getAddress(): Promise<string> {
@@ -96,6 +138,62 @@ export class EmptyProvider implements ConnectionProvider {
 
   ping(): Promise<boolean> {
     return Promise.resolve(false);
+  }
+
+  async getSignature(): Promise<string> {
+    return this.signature;
+  }
+
+  async getPairings(): Promise<PairingTypes.Struct[] | undefined> {
+    throw new Error(notInitializedError('getPairings'));
+  }
+
+  private async loginAccount(options?: {
+    address: string;
+    signature?: string;
+  }): Promise<string> {
+    throw new Error(notInitializedError('loginAccount'));
+  }
+
+  private async onSessionConnected(options?: {
+    session: SessionTypes.Struct;
+    signature?: string;
+  }): Promise<string> {
+    throw new Error(notInitializedError('onSessionConnected'));
+  }
+
+  private async handleTopicUpdateEvent({
+    topic,
+  }: {
+    topic: string;
+  }): Promise<void> {
+    throw new Error(notInitializedError('handleTopicUpdateEvent'));
+  }
+
+  private async handleSessionEvents({
+    topic,
+    params,
+  }: {
+    topic: string;
+    params: SessionEventTypes;
+  }): Promise<void> {
+    throw new Error(notInitializedError('handleSessionEvents'));
+  }
+
+  private async subscribeToEvents(client: Client): Promise<void> {
+    throw new Error(notInitializedError('subscribeToEvents'));
+  }
+
+  private async checkPersistedState(
+    client: Client,
+  ): Promise<SessionTypes.Struct | undefined> {
+    throw new Error(notInitializedError('checkPersistedState'));
+  }
+
+  private async cleanupPendingPairings(
+    options: {deletePairings?: boolean} = {},
+  ): Promise<void> {
+    throw new Error(notInitializedError('cleanupPendingPairings'));
   }
 }
 

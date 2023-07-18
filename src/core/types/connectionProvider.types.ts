@@ -24,10 +24,7 @@ export interface ConnectionProvider {
     transactions: Transaction[],
     options?: ProviderFeatureOptions,
   ): Promise<Transaction[]>;
-  signMessage<T extends SignableMessage>(
-    message: T,
-    options: ProviderFeatureOptions,
-  ): Promise<T>;
+  signMessage(message: SignableMessage): Promise<SignableMessage>;
   sendCustomMessage?({
     method,
     params,

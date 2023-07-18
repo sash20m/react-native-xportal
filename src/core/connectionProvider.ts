@@ -1,17 +1,13 @@
-import {ConnectionProvider} from './types/connectionProvider.types';
-import {emptyProvider} from './xportal/emptyWalletConnectProvider';
-import {WalletConnectProvider} from './xportal/walletConnectProvider';
+import {WalletConnectProvider} from './walletConnectProvider/walletConnectProvider';
 
-let walletConnectProvider: ConnectionProvider | WalletConnectProvider =
-  emptyProvider as ConnectionProvider;
+// The main provider with the main functions
+let walletConnectProvider: WalletConnectProvider;
 
 const setWalletConnectProvider = (provider: WalletConnectProvider) => {
   walletConnectProvider = provider;
 };
 
-const getWalletConnectProvider = ():
-  | WalletConnectProvider
-  | ConnectionProvider => {
+const getWalletConnectProvider = (): WalletConnectProvider => {
   return walletConnectProvider;
 };
 
