@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {resetOnLogout} from '../commonActions';
+import {resetOnLogout, setConnectionOnLogin} from '../commonActions';
 
 export interface ConnectionConfigSlice {
   connected?: boolean;
@@ -30,15 +30,36 @@ export const connectionConfigSlice = createSlice({
     resetConnectionConfig: (state: ConnectionConfigSlice) => {
       return initialState;
     },
+    updateAccountLoading: (
+      state: ConnectionConfigSlice,
+      action: PayloadAction<ConnectionConfigSlice>,
+    ) => {
+      console.log(action, ' e?');
+      return {...state, isAccountLoading: action.payload.isAccountLoading};
+    },
   },
   extraReducers: builder => {
-    builder.addCase(resetOnLogout, (state: ConnectionConfigSlice) => {
-      return {
-        ...initialState,
-        chain: state.chain,
-        projectId: state.projectId,
-      };
-    });
+    builder
+      .addCase(resetOnLogout, (state: ConnectionConfigSlice) => {
+        return {
+          ...initialState,
+          chain: state.chain,
+          projectId: state.projectId,
+        };
+      })
+      .addCase(
+        setConnectionOnLogin,
+        (
+          state: ConnectionConfigSlice,
+          action: PayloadAction<ConnectionConfigSlice>,
+        ) => {
+          return {
+            ...state,
+            connected: true,
+            isAccountLoading: false,
+          };
+        },
+      );
   },
 });
 
@@ -46,6 +67,7 @@ export const {
   setConnectionConfig,
   updateConnectionConfig,
   resetConnectionConfig,
+  updateAccountLoading,
 } = connectionConfigSlice.actions;
 
 export default connectionConfigSlice.reducer;

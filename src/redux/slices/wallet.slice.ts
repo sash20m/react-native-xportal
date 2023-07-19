@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {SessionTypes} from '@walletconnect/types/dist/types/sign-client/session';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {resetOnLogout} from '../commonActions';
+import {resetOnLogout, setConnectionOnLogin} from '../commonActions';
 
 export interface WalletSlice {
   address?: string;
@@ -27,9 +27,22 @@ export const walletSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(resetOnLogout, () => {
-      return initialState;
-    });
+    builder
+      .addCase(resetOnLogout, () => {
+        return initialState;
+      })
+      .addCase(
+        setConnectionOnLogin,
+        (state: WalletSlice, action: PayloadAction<WalletSlice>) => {
+          return {
+            ...state,
+            address: action.payload.address,
+            publickey: action.payload.publickey,
+            balance: action.payload.balance,
+            walletConnectSession: action.payload.walletConnectSession,
+          };
+        },
+      );
   },
 });
 

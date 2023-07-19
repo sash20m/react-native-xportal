@@ -3,7 +3,7 @@ import {WalletConnectProvider} from './walletConnectProvider/walletConnectProvid
 // The main provider with the main functions
 let walletConnectProvider: WalletConnectProvider;
 
-const setWalletConnectProvider = (provider: WalletConnectProvider) => {
+const setWalletConnectProvider = (provider: WalletConnectProvider): void => {
   walletConnectProvider = provider;
 };
 

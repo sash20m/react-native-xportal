@@ -1,14 +1,18 @@
 import {SessionEventTypes} from '@multiversx/sdk-wallet-connect-provider/out';
-import {setConnectionConfig} from '../../redux/slices/connectionConfig.slice';
+import {
+  setConnectionConfig,
+  updateAccountLoading,
+} from '../../redux/slices/connectionConfig.slice';
 import {store as reduxStore} from '../../redux/store';
-import {ConnectionMetadata, InitializeParams} from '../types/xPortal.types';
+import {InitializeParams} from '../types/xPortal.types';
 import {WalletConnectProvider} from '../walletConnectProvider/walletConnectProvider';
 import {Linking, Platform} from 'react-native';
 import {getEncodedXPortalLoginSchemaUrl} from '../walletConnectProvider/xportalDeeplink';
 import {
+  getWalletConnectProvider,
   setWalletConnectProvider,
-  walletConnectProvider,
 } from '../connectionProvider';
+import {resetOnLogout, setConnectionOnLogin} from '../../redux/commonActions';
 
 class XPortal {
   relayUrl = 'wss://relay.walletconnect.com';
@@ -61,6 +65,7 @@ class XPortal {
   }
 
   async login() {
+    const walletConnectProvider = getWalletConnectProvider();
     if (!walletConnectProvider) {
       return;
     }
@@ -68,18 +73,6 @@ class XPortal {
     const {uri: connectorUri, approval} = await walletConnectProvider.connect();
 
     console.log(`[connectorUri]=${connectorUri}`);
-
-    // if (!connectorUri) {
-    //   //   flashInformation(
-    //   //     'Wallet Connect Provider did not provide a valid connector URI',
-    //   //   );
-    //   try {
-    //     await walletConnector?.logout();
-    //   } catch (error: any) {
-    //     console.log(error);
-    //   }
-    //   return;
-    // }
 
     const encodedSchemaUrl = getEncodedXPortalLoginSchemaUrl(connectorUri);
     Linking.canOpenURL(encodedSchemaUrl)
@@ -90,14 +83,38 @@ class XPortal {
       })
       .catch(err => console.log(err));
 
+    await reduxStore.dispatch(updateAccountLoading({isAccountLoading: true}));
     try {
       await walletConnectProvider.login({approval});
+
+      await reduxStore.dispatch(
+        setConnectionOnLogin({
+          address: walletConnectProvider.address,
+          balance: 0,
+          walletConnectSession: walletConnectProvider.session,
+        }),
+      );
+
+      setWalletConnectProvider(walletConnectProvider);
     } catch (error: any) {
       // throwError('Could not login with xPortal properly. Please try again');
     }
+  }
 
-    setWalletConnectProvider(walletConnectProvider);
+  async logout() {
+    const walletConnectProvider = getWalletConnectProvider();
+    if (!walletConnectProvider) {
+      return;
+    }
+    try {
+      await walletConnectProvider.logout();
+      await reduxStore.dispatch(resetOnLogout());
+    } catch (error) {
+      console.log('Could not log out');
+    }
   }
 }
+
+// see about expiry in session
 
 export const xPortalSingleton = new XPortal();
