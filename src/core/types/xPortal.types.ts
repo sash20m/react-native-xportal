@@ -1,3 +1,5 @@
+import {IClientConnect} from '../../services/walletConnectProvider/walletConnectProvider';
+
 export enum ChainEnum {
   testnet = 't',
   devnet = 'd',
@@ -17,4 +19,5 @@ export interface InitializeParams {
   chain: '1' | 't' | 'd' | ChainEnum;
   projectId: string;
   metadata?: ConnectionMetadata;
+  callbacks: IClientConnect;
 }

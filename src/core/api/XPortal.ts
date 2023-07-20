@@ -1,4 +1,3 @@
-import {SessionEventTypes} from '@multiversx/sdk-wallet-connect-provider/out';
 import {
   setConnectionConfig,
   updateAccountLoading,
@@ -24,35 +23,19 @@ class XPortal {
     chain,
     projectId,
     metadata,
+    callbacks,
   }: InitializeParams): Promise<boolean> {
     console.log(chain, projectId, ' e?');
     await reduxStore.dispatch(setConnectionConfig({chain, projectId}));
 
-    const store = await this.getStoreState();
-    const callbacks = {
-      onClientLogin: async () => {
-        console.log('on login');
-      },
-      onClientLogout: async () => {
-        console.log('on logout');
-      },
-      onClientEvent: async (event: SessionEventTypes['event']) => {
-        console.log('event -> ', event);
-      },
-    };
-
-    const connectionProjectId = store.connectionConfigSlice.projectId || '';
-    const connectionChain = store.connectionConfigSlice.chain || '';
     const options = metadata ? {metadata} : {};
-
     const connectionProvider = new WalletConnectProvider(
       callbacks,
-      connectionChain,
+      chain,
       this.relayUrl,
-      connectionProjectId,
+      projectId,
       options,
     );
-
     await connectionProvider.init();
 
     setWalletConnectProvider(connectionProvider);
@@ -69,6 +52,10 @@ class XPortal {
     const walletConnectProvider = getWalletConnectProvider();
     if (!walletConnectProvider) {
       return;
+    }
+
+    if (walletConnectProvider.wasConnected) {
+      await walletConnectProvider.reinitialize();
     }
 
     const {uri: connectorUri, approval} = await walletConnectProvider.connect();

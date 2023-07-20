@@ -23,6 +23,7 @@ import {
   ConnectParamsTypes,
   TransactionResponse,
 } from './utils';
+import {reassignWalletConnectProvider} from '../../core/connectionProvider';
 
 interface SessionEventTypes {
   event: {
@@ -32,7 +33,7 @@ interface SessionEventTypes {
   chainId: string;
 }
 
-interface IClientConnect {
+export interface IClientConnect {
   onClientLogin: () => void;
   onClientLogout(): void;
   onClientEvent: (event: SessionEventTypes['event']) => void;
@@ -61,6 +62,7 @@ export class WalletConnectProvider {
   pairings: PairingTypes.Struct[] | undefined;
   processingTopic: string = '';
   options: SignClientTypes.Options | undefined = {};
+  wasConnected: boolean = false;
 
   onClientConnect: IClientConnect;
 
@@ -123,6 +125,28 @@ export class WalletConnectProvider {
         return this.isInitialized();
       }
     }
+  }
+
+  async reinitialize(): Promise<boolean> {
+    const options = this.options?.metadata
+      ? {metadata: this.options.metadata}
+      : {};
+
+    const connectionProvider = new WalletConnectProvider(
+      this.onClientConnect,
+      this.chainId,
+      this.walletConnectRelay,
+      this.walletConnectProjectId,
+      options,
+    );
+
+    await connectionProvider.init();
+
+    Object.assign(this, connectionProvider);
+
+    reassignWalletConnectProvider(connectionProvider);
+
+    return true;
   }
 
   /**
@@ -193,6 +217,8 @@ export class WalletConnectProvider {
       await this.logout({topic: this.session?.topic});
     }
 
+    this.wasConnected = true;
+
     try {
       if (options && options.approval) {
         const session = await options.approval();
@@ -243,6 +269,7 @@ export class WalletConnectProvider {
       }
     } catch (error) {
       this.reset();
+      this.wasConnected = false;
       Logger.error(WalletConnectProviderErrorMessagesEnum.unableToLogin);
       throw new Error(WalletConnectProviderErrorMessagesEnum.unableToLogin);
     } finally {
