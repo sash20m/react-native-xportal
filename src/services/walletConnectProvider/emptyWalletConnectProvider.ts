@@ -6,7 +6,7 @@ import {
   SessionEventTypes,
   SessionTypes,
 } from '@multiversx/sdk-wallet-connect-provider';
-import {ConnectionProvider} from '../types/connectionProvider.types';
+import {ConnectionProvider} from '../../core/types/connectionProvider.types';
 import {
   ConnectParamsTypes,
   WalletConnectProvider,

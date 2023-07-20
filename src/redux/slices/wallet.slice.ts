@@ -3,11 +3,17 @@ import {SessionTypes} from '@walletconnect/types/dist/types/sign-client/session'
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {resetOnLogout, setConnectionOnLogin} from '../commonActions';
 
+export interface Tokens {
+  ticker: string;
+  name: string;
+  identifier: string;
+  balance: number;
+  valueUsd: number;
+}
 export interface WalletSlice {
   address?: string;
   walletConnectSession?: SessionTypes.Struct;
-  balance?: any;
-  publickey?: string;
+  tokens?: Tokens;
 }
 
 const initialState: WalletSlice = {};
@@ -37,8 +43,7 @@ export const walletSlice = createSlice({
           return {
             ...state,
             address: action.payload.address,
-            publickey: action.payload.publickey,
-            balance: action.payload.balance,
+            tokens: action.payload.tokens,
             walletConnectSession: action.payload.walletConnectSession,
           };
         },
