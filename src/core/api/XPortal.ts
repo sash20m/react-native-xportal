@@ -5,14 +5,13 @@ import {
 import {store as reduxStore} from '../../redux/store';
 import {InitializeParams} from '../types/xPortal.types';
 import {WalletConnectProvider} from '../../services/walletConnectProvider/walletConnectProvider';
-import {Linking, Platform} from 'react-native';
-import {getEncodedXPortalLoginSchemaUrl} from '../../services/walletConnectProvider/xportalDeeplink';
 import {
   getWalletConnectProvider,
   setWalletConnectProvider,
 } from '../connectionProvider';
 import {resetOnLogout, setConnectionOnLogin} from '../../redux/commonActions';
 import http from '../../services/http';
+import {openXPortal, openXPortalForLogin} from '../../utils/openXPortal';
 
 class XPortal {
   relayUrl = 'wss://relay.walletconnect.com';
@@ -62,14 +61,7 @@ class XPortal {
 
     console.log(`[connectorUri]=${connectorUri}`);
 
-    const encodedSchemaUrl = getEncodedXPortalLoginSchemaUrl(connectorUri);
-    Linking.canOpenURL(encodedSchemaUrl)
-      .then(supported => {
-        if (supported || Platform.OS === 'android') {
-          return Linking.openURL(encodedSchemaUrl);
-        }
-      })
-      .catch(err => console.log(err));
+    openXPortalForLogin(connectorUri);
 
     await reduxStore.dispatch(updateAccountLoading({isAccountLoading: true}));
     try {
@@ -101,6 +93,11 @@ class XPortal {
     } catch (error) {
       console.log('Could not log out');
     }
+  }
+
+  async signTransaction(tx: any) {
+    // const tx
+    openXPortal();
   }
 }
 
