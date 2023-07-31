@@ -2,7 +2,7 @@ import {Linking, Platform} from 'react-native';
 import {
   getEncodedXPortalLoginSchemaUrl,
   getXPortalSchemaUrl,
-} from '../services/walletConnectProvider/xportalDeeplink';
+} from '../services/wallet/xportalDeeplink';
 
 export const openXPortalForLogin = (connectorUri: string | undefined): void => {
   try {

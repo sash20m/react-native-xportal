@@ -4,6 +4,7 @@ import {Signature} from '@multiversx/sdk-core/out/signature';
 import Client from '@walletconnect/sign-client';
 import {getAppMetadata} from '@walletconnect/utils';
 import {EngineTypes, SessionTypes, SignClientTypes} from '@walletconnect/types';
+import BigNumber from 'bignumber.js';
 
 import {
   WALLETCONNECT_MULTIVERSX_METHODS,
@@ -12,6 +13,13 @@ import {
 import {WalletConnectProviderErrorMessagesEnum} from './errors';
 import {Logger} from './logger';
 import {OptionalOperation} from './operation';
+import {
+  EXTRA_GAS_LIMIT_GUARDED_TX,
+  GAS_LIMIT,
+  GAS_PER_DATA_BYTE,
+} from '../../constants/gas';
+import {selectWalletAddress} from '../../redux/selectors/wallet.selector';
+import {getMxAccount} from '../http/multiversx';
 
 export interface ConnectParamsTypes {
   topic?: string;
@@ -173,4 +181,31 @@ export function getMetadata(metadata?: SignClientTypes.Options['metadata']) {
   }
 
   return;
+}
+
+export function calculateGasLimit({
+  data,
+  isGuarded,
+}: {
+  data?: string;
+  isGuarded?: boolean;
+}) {
+  const guardedAccountGasLimit = isGuarded ? EXTRA_GAS_LIMIT_GUARDED_TX : 0;
+  const bNconfigGasLimit = new BigNumber(GAS_LIMIT).plus(
+    guardedAccountGasLimit,
+  );
+  const bNgasPerDataByte = new BigNumber(GAS_PER_DATA_BYTE);
+  const bNgasValue = data
+    ? bNgasPerDataByte.times(Buffer.from(data).length)
+    : 0;
+  const bNgasLimit = bNconfigGasLimit.plus(bNgasValue);
+  const gasLimit = bNgasLimit.toString(10);
+  return gasLimit;
+}
+
+export async function createSignableTransactions() {
+  //
+  const address = await selectWalletAddress();
+  const account = await getMxAccount(address);
+  const accountNonce = getLatestNonce(account);
 }

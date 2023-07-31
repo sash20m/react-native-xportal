@@ -1,4 +1,4 @@
-import {WalletConnectProvider} from '../services/walletConnectProvider/walletConnectProvider';
+import {WalletConnectProvider} from '../services/wallet/walletConnectProvider';
 
 // The main provider with the main functions
 let walletConnectProvider: WalletConnectProvider;

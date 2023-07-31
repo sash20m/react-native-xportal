@@ -2,6 +2,7 @@
 import {SessionTypes} from '@walletconnect/types/dist/types/sign-client/session';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {resetOnLogout, setConnectionOnLogin} from '../commonActions';
+import {MxAccount} from '../../types';
 
 export interface Tokens {
   ticker: string;
@@ -10,7 +11,7 @@ export interface Tokens {
   balance: number;
   valueUsd: number;
 }
-export interface WalletSlice {
+export interface WalletSlice extends MxAccount {
   address?: string;
   walletConnectSession?: SessionTypes.Struct;
   tokens?: Tokens;
@@ -23,13 +24,13 @@ export const walletSlice = createSlice({
   initialState,
   reducers: {
     setWallet: (state: WalletSlice, action: PayloadAction<WalletSlice>) => {
-      state = action.payload;
+      return action.payload;
     },
     updateWallet: (state: WalletSlice, action: PayloadAction<WalletSlice>) => {
-      state = {...state, ...action.payload};
+      return {...state, ...action.payload};
     },
     resetWallet: (state: WalletSlice) => {
-      state = initialState;
+      return initialState;
     },
   },
   extraReducers: builder => {

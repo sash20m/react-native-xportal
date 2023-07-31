@@ -1,10 +1,5 @@
-import {IClientConnect} from '../../services/walletConnectProvider/walletConnectProvider';
-
-export enum ChainEnum {
-  testnet = 't',
-  devnet = 'd',
-  mainnet = '1',
-}
+import {IClientConnect} from '../../services/wallet/walletConnectProvider';
+import {ChainEnum} from '../../types';
 
 export interface ConnectionMetadata {
   description: string;

@@ -4,7 +4,7 @@ import {
 } from '../../redux/slices/connectionConfig.slice';
 import {store as reduxStore} from '../../redux/store';
 import {InitializeParams} from '../types/xPortal.types';
-import {WalletConnectProvider} from '../../services/walletConnectProvider/walletConnectProvider';
+import {WalletConnectProvider} from '../../services/wallet/walletConnectProvider';
 import {
   getWalletConnectProvider,
   setWalletConnectProvider,
@@ -12,6 +12,11 @@ import {
 import {resetOnLogout, setConnectionOnLogin} from '../../redux/commonActions';
 import http from '../../services/http';
 import {openXPortal, openXPortalForLogin} from '../../utils/openXPortal';
+import {Transaction} from '@multiversx/sdk-core';
+import {
+  createSignableTransaction,
+  createSignableTransactions,
+} from '../../services/wallet/utils';
 
 class XPortal {
   relayUrl = 'wss://relay.walletconnect.com';
@@ -68,6 +73,7 @@ class XPortal {
       await walletConnectProvider.login({approval});
 
       const tokens = await http.getAccountTokens(walletConnectProvider.address);
+      // account info from api
       await reduxStore.dispatch(
         setConnectionOnLogin({
           address: walletConnectProvider.address,
@@ -95,8 +101,23 @@ class XPortal {
     }
   }
 
-  async signTransaction(tx: any) {
+  async signTransaction(transactions: Transaction | Transaction[]) {
     // const tx
+    const transactionsPayload = Array.isArray(transactions)
+      ? transactions
+      : [transactions];
+
+    const areComplexTransactions = transactionsPayload.every(
+      tx => Object.getPrototypeOf(tx).toPlainObject != null,
+    );
+    let txToSign = transactionsPayload;
+    if (!areComplexTransactions) {
+      txToSign = await createSignableTransactions({
+        transactions: transactionsPayload as SimpleTransactionType[],
+        minGasLimit,
+      });
+    }
+
     openXPortal();
   }
 }

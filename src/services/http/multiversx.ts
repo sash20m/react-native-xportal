@@ -1,8 +1,11 @@
 import axios from 'axios';
-import {URLS} from '../../constants/urls';
+import {getMultiversxApi} from '../../utils/getMultiversxApi';
+import {ACCOUNTS_ENDPOINT} from '../../constants/mxEndpoints';
+import {MxAccount} from '../../types';
 
 export const getAccountTokens = async (address: string) => {
-  const url = URLS.MULTIVERSX_API + `/accounts/${address}/tokens`;
+  const mxApi = await getMultiversxApi();
+  const url = mxApi + `/accounts/${address}/tokens`;
   const {data} = await axios.get(url);
 
   const tokens = data.map((token: any) => {
@@ -26,4 +29,20 @@ export const getAccountTokens = async (address: string) => {
   });
 
   return tokens;
+};
+
+export const getMxAccount = async (address?: string) => {
+  if (!address) {
+    return null;
+  }
+  const mxApi = await getMultiversxApi();
+  const url = `${mxApi}/${ACCOUNTS_ENDPOINT}/${address}?withGuardianInfo=true`;
+
+  try {
+    const {data} = await axios.get<MxAccount>(url);
+    return data;
+  } catch (err) {
+    console.error('error fetching configuration for ', url);
+  }
+  return null;
 };
