@@ -13,10 +13,7 @@ import {resetOnLogout, setConnectionOnLogin} from '../../redux/commonActions';
 import http from '../../services/http';
 import {openXPortal, openXPortalForLogin} from '../../utils/openXPortal';
 import {Transaction} from '@multiversx/sdk-core';
-import {
-  createSignableTransaction,
-  createSignableTransactions,
-} from '../../services/wallet/utils';
+import {createSignableTransactions} from '../../services/wallet/utils';
 
 class XPortal {
   relayUrl = 'wss://relay.walletconnect.com';
@@ -73,12 +70,15 @@ class XPortal {
       await walletConnectProvider.login({approval});
 
       const tokens = await http.getAccountTokens(walletConnectProvider.address);
-      // account info from api
+      const account = await http.getMxAccount(walletConnectProvider.address);
+
+      console.log(account, ' ee');
       await reduxStore.dispatch(
         setConnectionOnLogin({
           address: walletConnectProvider.address,
           tokens,
           walletConnectSession: walletConnectProvider.session,
+          ...account,
         }),
       );
 
@@ -101,7 +101,7 @@ class XPortal {
     }
   }
 
-  async signTransaction(transactions: Transaction | Transaction[]) {
+  async signTransactions(transactions: Transaction | Transaction[]) {
     // const tx
     const transactionsPayload = Array.isArray(transactions)
       ? transactions

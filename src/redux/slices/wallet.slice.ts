@@ -46,6 +46,7 @@ export const walletSlice = createSlice({
             address: action.payload.address,
             tokens: action.payload.tokens,
             walletConnectSession: action.payload.walletConnectSession,
+            ...action.payload,
           };
         },
       );

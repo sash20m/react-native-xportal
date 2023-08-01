@@ -33,7 +33,7 @@ export const getAccountTokens = async (address: string) => {
 
 export const getMxAccount = async (address?: string) => {
   if (!address) {
-    return null;
+    return {};
   }
   const mxApi = await getMultiversxApi();
   const url = `${mxApi}/${ACCOUNTS_ENDPOINT}/${address}?withGuardianInfo=true`;
@@ -44,5 +44,5 @@ export const getMxAccount = async (address?: string) => {
   } catch (err) {
     console.error('error fetching configuration for ', url);
   }
-  return null;
+  return {};
 };

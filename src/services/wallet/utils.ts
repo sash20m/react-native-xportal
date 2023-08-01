@@ -207,5 +207,7 @@ export async function createSignableTransactions() {
   //
   const address = await selectWalletAddress();
   const account = await getMxAccount(address);
-  const accountNonce = getLatestNonce(account);
+  const accountNonce = account.nonce;
+
+  //update account nonce in redux
 }
