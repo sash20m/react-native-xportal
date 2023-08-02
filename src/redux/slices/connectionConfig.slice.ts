@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {resetOnLogout, setConnectionOnLogin} from '../commonActions';
+import {ChainEnum} from '../../types';
 
 export interface ConnectionConfigSlice {
   connected?: boolean;
   isAccountLoading?: boolean;
-  chain?: string;
+  chainId?: '1' | 't' | 'd' | ChainEnum;
   projectId?: string;
 }
 
@@ -43,7 +44,7 @@ export const connectionConfigSlice = createSlice({
       .addCase(resetOnLogout, (state: ConnectionConfigSlice) => {
         return {
           ...initialState,
-          chain: state.chain,
+          chainId: state.chainId,
           projectId: state.projectId,
         };
       })

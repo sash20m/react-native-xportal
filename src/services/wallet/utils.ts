@@ -1,10 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {Address, Transaction} from '@multiversx/sdk-core';
+import {
+  Address,
+  IPlainTransactionObject,
+  TokenPayment,
+  Transaction,
+  TransactionOptions,
+  TransactionPayload,
+  TransactionVersion,
+} from '@multiversx/sdk-core';
 import {Signature} from '@multiversx/sdk-core/out/signature';
 import Client from '@walletconnect/sign-client';
 import {getAppMetadata} from '@walletconnect/utils';
 import {EngineTypes, SessionTypes, SignClientTypes} from '@walletconnect/types';
 import BigNumber from 'bignumber.js';
+import {NetworkConfig} from '@multiversx/sdk-network-providers';
 
 import {
   WALLETCONNECT_MULTIVERSX_METHODS,
@@ -17,9 +26,20 @@ import {
   EXTRA_GAS_LIMIT_GUARDED_TX,
   GAS_LIMIT,
   GAS_PER_DATA_BYTE,
+  GAS_PRICE,
+  GAS_PRICE_MODIFIER,
+  VERSION,
 } from '../../constants/gas';
 import {selectWalletAddress} from '../../redux/selectors/wallet.selector';
 import {getMxAccount} from '../http/multiversx';
+import {SimpleTransactionType} from '../../types';
+import {selectChainID} from '../../redux/selectors/connectionConfig.selector';
+import {Buffer} from 'buffer';
+import {
+  isStringBase64,
+  stringIsFloat,
+  stringIsInteger,
+} from '../../utils/stringsUtils';
 
 export interface ConnectParamsTypes {
   topic?: string;
@@ -33,6 +53,17 @@ export interface TransactionResponse {
   guardianSignature?: string;
   options?: number;
   version?: number;
+}
+
+export interface CalculateFeeLimitType {
+  gasLimit: string;
+  gasPrice: string;
+  data: string;
+  gasPerDataByte: string;
+  gasPriceModifier: string;
+  chainId: string;
+  minGasLimit?: string;
+  defaultGasPrice?: string;
 }
 
 export function getCurrentSession(
@@ -203,11 +234,166 @@ export function calculateGasLimit({
   return gasLimit;
 }
 
-export async function createSignableTransactions() {
-  //
+export async function createSignableTransactions(
+  transactions: SimpleTransactionType[],
+) {
   const address = await selectWalletAddress();
   const account = await getMxAccount(address);
-  const accountNonce = account.nonce;
+  const accountNonce = account?.nonce || 0;
+
+  return transactions.map(async tx => {
+    const {
+      value,
+      receiver,
+      data = '',
+      chainID,
+      version = 1,
+      options,
+      gasPrice = GAS_PRICE,
+      gasLimit = calculateGasLimit({
+        data: tx.data,
+        isGuarded: account?.isGuarded,
+      }),
+      guardian,
+      guardianSignature,
+      nonce = accountNonce ? accountNonce : 0,
+    } = tx;
+    let validatedReceiver = receiver;
+
+    try {
+      const addr = new Address(receiver);
+      validatedReceiver = addr.hex();
+    } catch (err) {
+      console.log('invalid receiver');
+    }
+
+    const storeChainId = (await selectChainID()) || 'd';
+    const txChainId = chainID?.toString().toLowerCase() || null;
+
+    if (txChainId && txChainId !== storeChainId) {
+      throw Error(
+        `The ChainId for the transaction with nonce=${nonce}, is not the same as walletconnect's chainId`,
+      );
+    }
+
+    return newTransaction({
+      value,
+      receiver: validatedReceiver,
+      data,
+      gasPrice,
+      gasLimit: Number(gasLimit),
+      nonce: Number(nonce.valueOf().toString()),
+      sender: new Address(address).hex(),
+      chainID: storeChainId,
+      version,
+      options,
+      guardian,
+      guardianSignature,
+    });
+  });
 
   //update account nonce in redux
+}
+
+function newTransaction(rawTransaction: IPlainTransactionObject) {
+  const transaction = new Transaction({
+    value: rawTransaction.value.valueOf(),
+    data: getDataPayloadForTransaction(rawTransaction.data),
+    nonce: rawTransaction.nonce.valueOf(),
+    receiver: new Address(rawTransaction.receiver),
+    sender: new Address(rawTransaction.sender),
+    gasLimit: rawTransaction.gasLimit.valueOf() ?? GAS_LIMIT,
+    gasPrice: rawTransaction.gasPrice.valueOf() ?? GAS_PRICE,
+    chainID: rawTransaction.chainID.valueOf(),
+    version: new TransactionVersion(rawTransaction.version ?? VERSION),
+    ...(rawTransaction.options
+      ? {options: new TransactionOptions(rawTransaction.options)}
+      : {}),
+    ...(rawTransaction.guardian
+      ? {guardian: new Address(rawTransaction.guardian)}
+      : {}),
+  });
+
+  if (rawTransaction?.guardianSignature) {
+    transaction.applyGuardianSignature(
+      Buffer.from(rawTransaction.guardianSignature, 'hex'),
+    );
+  }
+
+  if (rawTransaction?.signature) {
+    transaction.applySignature(Buffer.from(rawTransaction.signature, 'hex'));
+  }
+
+  return transaction;
+}
+
+export const getDataPayloadForTransaction = (
+  data?: string,
+): TransactionPayload => {
+  const defaultData = data ?? '';
+
+  return isStringBase64(defaultData)
+    ? TransactionPayload.fromEncoded(defaultData)
+    : new TransactionPayload(defaultData);
+};
+
+export function calcTotalFee(transactions: Transaction[], minGasLimit: number) {
+  let totalFee = new BigNumber(0);
+
+  transactions.forEach(tx => {
+    const fee = calculateFeeLimit({
+      gasPerDataByte: String(GAS_PER_DATA_BYTE),
+      gasPriceModifier: String(GAS_PRICE_MODIFIER),
+      minGasLimit: String(minGasLimit),
+      gasLimit: tx.getGasLimit().valueOf().toString(),
+      gasPrice: tx.getGasPrice().valueOf().toString(),
+      data: tx.getData().toString(),
+      chainId: tx.getChainID().valueOf(),
+    });
+    totalFee = totalFee.plus(new BigNumber(fee));
+  });
+
+  return totalFee;
+}
+
+const placeholderData = {
+  from: 'erd12dnfhej64s6c56ka369gkyj3hwv5ms0y5rxgsk2k7hkd2vuk7rvqxkalsa',
+  to: 'erd12dnfhej64s6c56ka369gkyj3hwv5ms0y5rxgsk2k7hkd2vuk7rvqxkalsa',
+};
+export function calculateFeeLimit({
+  minGasLimit = String(GAS_LIMIT),
+  gasLimit,
+  gasPrice,
+  data: inputData,
+  gasPerDataByte,
+  gasPriceModifier,
+  defaultGasPrice = String(GAS_PRICE),
+  chainId,
+}: CalculateFeeLimitType) {
+  const data = inputData || '';
+  const validGasLimit = stringIsInteger(gasLimit) ? gasLimit : minGasLimit;
+  const validGasPrice = stringIsFloat(gasPrice) ? gasPrice : defaultGasPrice;
+  const transaction = new Transaction({
+    nonce: 0,
+    value: TokenPayment.egldFromAmount('0'),
+    receiver: new Address(placeholderData.to),
+    sender: new Address(placeholderData.to),
+    gasPrice: parseInt(validGasPrice),
+    gasLimit: parseInt(validGasLimit),
+    data: new TransactionPayload(data.trim()),
+    chainID: chainId,
+    version: new TransactionVersion(1),
+  });
+
+  const networkConfig = new NetworkConfig();
+  networkConfig.MinGasLimit = parseInt(minGasLimit);
+  networkConfig.GasPerDataByte = parseInt(gasPerDataByte);
+  networkConfig.GasPriceModifier = parseFloat(gasPriceModifier);
+  try {
+    const bNfee = transaction.computeFee(networkConfig);
+    const fee = bNfee.toString(10);
+    return fee;
+  } catch (err) {
+    return '0';
+  }
 }

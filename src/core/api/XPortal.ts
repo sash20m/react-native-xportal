@@ -3,7 +3,7 @@ import {
   updateAccountLoading,
 } from '../../redux/slices/connectionConfig.slice';
 import {store as reduxStore} from '../../redux/store';
-import {InitializeParams} from '../types/xPortal.types';
+import {InitializeParams, SignTransactionsParams} from '../types/xPortal.types';
 import {WalletConnectProvider} from '../../services/wallet/walletConnectProvider';
 import {
   getWalletConnectProvider,
@@ -13,7 +13,15 @@ import {resetOnLogout, setConnectionOnLogin} from '../../redux/commonActions';
 import http from '../../services/http';
 import {openXPortal, openXPortalForLogin} from '../../utils/openXPortal';
 import {Transaction} from '@multiversx/sdk-core';
-import {createSignableTransactions} from '../../services/wallet/utils';
+import {
+  calcTotalFee,
+  createSignableTransactions,
+} from '../../services/wallet/utils';
+import {SimpleTransactionType} from '../../types';
+import {GAS_LIMIT} from '../../constants/gas';
+import BigNumber from 'bignumber.js';
+import {stringIsFloat} from '../../utils/stringsUtils';
+import {selectWalletBalance} from '../../redux/selectors/wallet.selector';
 
 class XPortal {
   relayUrl = 'wss://relay.walletconnect.com';
@@ -21,18 +29,18 @@ class XPortal {
   constructor() {}
 
   async initialize({
-    chain,
+    chainId,
     projectId,
     metadata,
     callbacks,
   }: InitializeParams): Promise<boolean> {
-    console.log(chain, projectId, ' e?');
-    await reduxStore.dispatch(setConnectionConfig({chain, projectId}));
+    console.log(chainId, projectId, ' e?');
+    await reduxStore.dispatch(setConnectionConfig({chainId, projectId}));
 
     const options = metadata ? {metadata} : {};
     const connectionProvider = new WalletConnectProvider(
       callbacks,
-      chain,
+      chainId,
       this.relayUrl,
       projectId,
       options,
@@ -101,7 +109,10 @@ class XPortal {
     }
   }
 
-  async signTransactions(transactions: Transaction | Transaction[]) {
+  async signTransactions({
+    transactions,
+    minGasLimit = GAS_LIMIT,
+  }: SignTransactionsParams) {
     // const tx
     const transactionsPayload = Array.isArray(transactions)
       ? transactions
@@ -112,13 +123,32 @@ class XPortal {
     );
     let txToSign = transactionsPayload;
     if (!areComplexTransactions) {
-      txToSign = await createSignableTransactions({
-        transactions: transactionsPayload as SimpleTransactionType[],
-        minGasLimit,
-      });
+      txToSign = await createSignableTransactions(
+        transactions as SimpleTransactionType[],
+      );
     }
 
-    openXPortal();
+    const accountBalance = (await selectWalletBalance()) || 0;
+    const bNtotalFee = calcTotalFee(txToSign as Transaction[], minGasLimit);
+    const bNbalance = new BigNumber(
+      stringIsFloat(String(accountBalance)) ? accountBalance : '0',
+    );
+    const hasSufficientFunds = bNbalance.minus(bNtotalFee).isGreaterThan(0);
+
+    if (!hasSufficientFunds) {
+      throw new Error('Insufficient funds to cover the transaction fees');
+    }
+
+    try {
+      openXPortal();
+    } catch (error) {
+      console.log('Sign Transaction in xPortal wallet');
+    }
+
+    const walletConnectProvider = getWalletConnectProvider();
+    const signedTransaction = await walletConnectProvider.signTransactions(
+      txToSign as Transaction[],
+    );
   }
 }
 

@@ -1,5 +1,6 @@
+import {Transaction} from '@multiversx/sdk-core/out';
 import {IClientConnect} from '../../services/wallet/walletConnectProvider';
-import {ChainEnum} from '../../types';
+import {ChainEnum, SimpleTransactionType} from '../../types';
 
 export interface ConnectionMetadata {
   description: string;
@@ -11,8 +12,13 @@ export interface ConnectionMetadata {
 export interface InitializeParams {
   onLogin?: () => any;
   onLogout?: () => any;
-  chain: '1' | 't' | 'd' | ChainEnum;
+  chainId: '1' | 't' | 'd' | ChainEnum;
   projectId: string;
   metadata?: ConnectionMetadata;
   callbacks: IClientConnect;
+}
+
+export interface SignTransactionsParams {
+  transactions: (Transaction | SimpleTransactionType)[];
+  minGasLimit: number;
 }

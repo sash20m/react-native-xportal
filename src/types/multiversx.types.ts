@@ -53,3 +53,17 @@ export interface ScamInfoType {
   type: string;
   info: string;
 }
+
+export interface SimpleTransactionType {
+  value: string;
+  receiver: string;
+  data?: string;
+  gasPrice?: number;
+  gasLimit?: number;
+  chainID?: string;
+  version?: number;
+  options?: number;
+  guardian?: string;
+  guardianSignature?: string;
+  nonce?: number;
+}
