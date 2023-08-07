@@ -1,6 +1,6 @@
 import {store as reduxStore} from '../../redux/store';
 
-export const selectChainID = async () => {
-  const state = await reduxStore.getState();
+export const selectChainID = () => {
+  const state = reduxStore.getState();
   return state.connectionConfigSlice.chainId;
 };

@@ -113,7 +113,6 @@ class XPortal {
     transactions,
     minGasLimit = GAS_LIMIT,
   }: SignTransactionsParams) {
-    // const tx
     const transactionsPayload = Array.isArray(transactions)
       ? transactions
       : [transactions];
@@ -128,7 +127,11 @@ class XPortal {
       );
     }
 
-    const accountBalance = (await selectWalletBalance()) || 0;
+    console.log(txToSign, 'eer?');
+
+    return;
+
+    const accountBalance = selectWalletBalance() || 0;
     const bNtotalFee = calcTotalFee(txToSign as Transaction[], minGasLimit);
     const bNbalance = new BigNumber(
       stringIsFloat(String(accountBalance)) ? accountBalance : '0',
@@ -149,6 +152,8 @@ class XPortal {
     const signedTransaction = await walletConnectProvider.signTransactions(
       txToSign as Transaction[],
     );
+
+    console.log(signedTransaction, ' e?');
   }
 }
 

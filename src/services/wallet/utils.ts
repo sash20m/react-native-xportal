@@ -40,6 +40,7 @@ import {
   stringIsFloat,
   stringIsInteger,
 } from '../../utils/stringsUtils';
+import {updateWallet} from '../../redux/slices/wallet.slice';
 
 export interface ConnectParamsTypes {
   topic?: string;
@@ -237,11 +238,12 @@ export function calculateGasLimit({
 export async function createSignableTransactions(
   transactions: SimpleTransactionType[],
 ) {
-  const address = await selectWalletAddress();
+  const address = selectWalletAddress();
   const account = await getMxAccount(address);
   const accountNonce = account?.nonce || 0;
+  let highestNonce = accountNonce;
 
-  return transactions.map(async tx => {
+  const signableTransactions = transactions.map((tx, index) => {
     const {
       value,
       receiver,
@@ -256,7 +258,7 @@ export async function createSignableTransactions(
       }),
       guardian,
       guardianSignature,
-      nonce = accountNonce ? accountNonce : 0,
+      nonce = accountNonce ? accountNonce + index : 0,
     } = tx;
     let validatedReceiver = receiver;
 
@@ -267,13 +269,17 @@ export async function createSignableTransactions(
       console.log('invalid receiver');
     }
 
-    const storeChainId = (await selectChainID()) || 'd';
+    const storeChainId = selectChainID() || 'd';
     const txChainId = chainID?.toString().toLowerCase() || null;
 
     if (txChainId && txChainId !== storeChainId) {
       throw Error(
         `The ChainId for the transaction with nonce=${nonce}, is not the same as walletconnect's chainId`,
       );
+    }
+
+    if (nonce > highestNonce) {
+      highestNonce = nonce;
     }
 
     return newTransaction({
@@ -292,7 +298,9 @@ export async function createSignableTransactions(
     });
   });
 
-  //update account nonce in redux
+  updateWallet({nonce: highestNonce});
+
+  return signableTransactions;
 }
 
 function newTransaction(rawTransaction: IPlainTransactionObject) {

@@ -1,11 +1,11 @@
 import {store as reduxStore} from '../../redux/store';
 
-export const selectWalletAddress = async () => {
-  const state = await reduxStore.getState();
+export const selectWalletAddress = () => {
+  const state = reduxStore.getState();
   return state.walletSlice.address;
 };
 
-export const selectWalletBalance = async () => {
-  const state = await reduxStore.getState();
+export const selectWalletBalance = () => {
+  const state = reduxStore.getState();
   return state.walletSlice.balance;
 };

@@ -20,5 +20,5 @@ export interface InitializeParams {
 
 export interface SignTransactionsParams {
   transactions: (Transaction | SimpleTransactionType)[];
-  minGasLimit: number;
+  minGasLimit?: number;
 }
