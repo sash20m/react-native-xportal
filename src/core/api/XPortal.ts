@@ -129,8 +129,6 @@ class XPortal {
 
     console.log(txToSign, 'eer?');
 
-    return;
-
     const accountBalance = selectWalletBalance() || 0;
     const bNtotalFee = calcTotalFee(txToSign as Transaction[], minGasLimit);
     const bNbalance = new BigNumber(
