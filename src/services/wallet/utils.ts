@@ -41,6 +41,7 @@ import {
   stringIsInteger,
 } from '../../utils/stringsUtils';
 import {updateWallet} from '../../redux/slices/wallet.slice';
+import {store as reduxStore} from '../../redux/store';
 
 export interface ConnectParamsTypes {
   topic?: string;
@@ -298,7 +299,7 @@ export async function createSignableTransactions(
     });
   });
 
-  updateWallet({nonce: highestNonce});
+  await reduxStore.dispatch(updateWallet({nonce: highestNonce}));
 
   return signableTransactions;
 }
