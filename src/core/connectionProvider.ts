@@ -17,9 +17,14 @@ const getWalletConnectProvider = (): WalletConnectProvider => {
   return walletConnectProvider;
 };
 
+const resetWalletConnectProvider = () => {
+  walletConnectProvider = {} as WalletConnectProvider;
+};
+
 export {
   walletConnectProvider,
   setWalletConnectProvider,
   reassignWalletConnectProvider,
   getWalletConnectProvider,
+  resetWalletConnectProvider,
 };
