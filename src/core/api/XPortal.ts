@@ -112,7 +112,7 @@ class XPortal {
   async signTransactions({
     transactions,
     minGasLimit = GAS_LIMIT,
-  }: SignTransactionsParams) {
+  }: SignTransactionsParams): Promise<Transaction[] | null> {
     const transactionsPayload = Array.isArray(transactions)
       ? transactions
       : [transactions];
@@ -147,11 +147,16 @@ class XPortal {
     }
 
     const walletConnectProvider = getWalletConnectProvider();
-    const signedTransaction = await walletConnectProvider.signTransactions(
-      txToSign as Transaction[],
-    );
+    try {
+      const signedTransaction = await walletConnectProvider.signTransactions(
+        txToSign as Transaction[],
+      );
 
-    console.log(signedTransaction, ' e?');
+      return signedTransaction;
+    } catch (error) {
+      console.log('error ', error);
+    }
+    return null;
   }
 }
 

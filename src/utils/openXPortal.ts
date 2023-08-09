@@ -7,7 +7,8 @@ import {
 export const openXPortalForLogin = (connectorUri: string | undefined): void => {
   try {
     const encodedSchemaUrl = getEncodedXPortalLoginSchemaUrl(connectorUri);
-    // console.log('[encodedSchemaUrl]', encodedSchemaUrl);
+    console.log('[encodedSchemaUrl]', encodedSchemaUrl);
+
     Linking.canOpenURL(encodedSchemaUrl)
       .then(supported => {
         if (supported || Platform.OS === 'android') {

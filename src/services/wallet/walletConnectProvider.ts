@@ -19,7 +19,6 @@ import {
   getCurrentTopic,
   getAddressFromSession,
   getConnectionParams,
-  getMetadata,
   ConnectParamsTypes,
   TransactionResponse,
 } from './utils';
@@ -99,17 +98,11 @@ export class WalletConnectProvider {
         if (!this.isInitializing) {
           this.isInitializing = true;
           this.reset();
-          const metadata = this.options?.metadata
-            ? {
-                metadata: getMetadata(this.options?.metadata),
-              }
-            : {};
 
           const client = await Client.init({
-            ...this.options,
             relayUrl: this.walletConnectRelay,
             projectId: this.walletConnectProjectId,
-            ...metadata,
+            ...this.options,
           });
 
           this.walletConnector = client;
