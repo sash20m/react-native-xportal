@@ -573,6 +573,7 @@ export class WalletConnectProvider {
             WalletConnectProviderErrorMessagesEnum.invalidCustomRequestResponse,
           );
         }
+        return response;
       } catch (error) {
         Logger.error(
           WalletConnectProviderErrorMessagesEnum.invalidCustomRequestResponse,

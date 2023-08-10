@@ -9,8 +9,6 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@elrondnetwork/erdjs": "^11.1.2",
-    "@elrondnetwork/erdjs-network-providers": "^1.2.0",
     "@multiversx/sdk-core": "^12.6.0",
     "@multiversx/sdk-network-providers": "^1.5.0",
     "@multiversx/sdk-wallet-connect-provider": "^4.0.2",

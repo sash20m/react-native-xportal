@@ -1,6 +1,7 @@
 import {Transaction} from '@multiversx/sdk-core/out';
 import {IClientConnect} from '../../services/wallet/walletConnectProvider';
 import {ChainEnum, SimpleTransactionType} from '../../types';
+import {EngineTypes} from '@walletconnect/types';
 
 export interface ConnectionMetadata {
   description: string;
@@ -21,4 +22,10 @@ export interface InitializeParams {
 export interface SignTransactionsParams {
   transactions: (Transaction | SimpleTransactionType)[];
   minGasLimit?: number;
+}
+export interface SignMessageParams {
+  message: string;
+}
+export interface SendCustomRequestParams {
+  request: EngineTypes.RequestParams['request'];
 }

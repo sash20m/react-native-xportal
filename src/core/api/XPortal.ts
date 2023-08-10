@@ -3,7 +3,12 @@ import {
   updateAccountLoading,
 } from '../../redux/slices/connectionConfig.slice';
 import {store as reduxStore} from '../../redux/store';
-import {InitializeParams, SignTransactionsParams} from '../types/xPortal.types';
+import {
+  InitializeParams,
+  SendCustomRequestParams,
+  SignMessageParams,
+  SignTransactionsParams,
+} from '../types/xPortal.types';
 import {WalletConnectProvider} from '../../services/wallet/walletConnectProvider';
 import {
   getWalletConnectProvider,
@@ -12,7 +17,7 @@ import {
 import {resetOnLogout, setConnectionOnLogin} from '../../redux/commonActions';
 import http from '../../services/http';
 import {openXPortal, openXPortalForLogin} from '../../utils/openXPortal';
-import {Transaction} from '@multiversx/sdk-core';
+import {Address, SignableMessage, Transaction} from '@multiversx/sdk-core';
 import {
   calcTotalFee,
   createSignableTransactions,
@@ -21,12 +26,30 @@ import {SimpleTransactionType} from '../../types';
 import {GAS_LIMIT} from '../../constants/gas';
 import BigNumber from 'bignumber.js';
 import {stringIsFloat} from '../../utils/stringsUtils';
-import {selectWalletBalance} from '../../redux/selectors/wallet.selector';
+import {
+  selectWalletAddress,
+  selectWalletBalance,
+} from '../../redux/selectors/wallet.selector';
+import {selectConnectedState} from '../../redux/selectors/connectionConfig.selector';
 
 class XPortal {
-  relayUrl = 'wss://relay.walletconnect.com';
+  private relayUrl = 'wss://relay.walletconnect.com';
 
   constructor() {}
+
+  getWalletAddress(): string | null {
+    const address = selectWalletAddress();
+
+    if (!address) {
+      return null;
+    }
+    return address;
+  }
+
+  isConnected(): boolean {
+    const state = selectConnectedState();
+    return !!state;
+  }
 
   async initialize({
     chainId,
@@ -157,6 +180,73 @@ class XPortal {
       console.log('error ', error);
     }
     return null;
+    // get again the balances
+  }
+
+  async signMessage({
+    message,
+  }: SignMessageParams): Promise<SignableMessage | null> {
+    // validate message
+    // other validations
+    const address = selectWalletAddress();
+    const signableMessage = new SignableMessage({
+      address: new Address(address),
+      message: Buffer.from(message, 'ascii'),
+    });
+
+    try {
+      openXPortal();
+    } catch (error) {
+      console.log('Sign Transaction in xPortal wallet');
+    }
+
+    const walletConnectProvider = getWalletConnectProvider();
+    try {
+      const signedMessage = await walletConnectProvider.signMessage(
+        signableMessage,
+      );
+
+      return signedMessage;
+    } catch (error) {
+      console.log(error);
+    }
+
+    return null;
+  }
+
+  async sendCustomRequest({request}: SendCustomRequestParams): Promise<any> {
+    // validations
+    try {
+      openXPortal();
+    } catch (error) {
+      console.log('Sign Transaction in xPortal wallet');
+    }
+
+    const walletConnectProvider = getWalletConnectProvider();
+    try {
+      const response = await walletConnectProvider.sendCustomRequest({
+        request,
+      });
+
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
+
+    return null;
+  }
+
+  async ping(): Promise<boolean> {
+    // checks
+    const walletConnectProvider = getWalletConnectProvider();
+    try {
+      const response = await walletConnectProvider.ping();
+
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
+    return false;
   }
 }
 
