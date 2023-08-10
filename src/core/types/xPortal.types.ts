@@ -15,7 +15,7 @@ export interface InitializeParams {
   onLogout?: () => any;
   chainId: '1' | 't' | 'd' | ChainEnum;
   projectId: string;
-  metadata?: ConnectionMetadata;
+  metadata: ConnectionMetadata;
   callbacks: IClientConnect;
 }
 
@@ -28,4 +28,12 @@ export interface SignMessageParams {
 }
 export interface SendCustomRequestParams {
   request: EngineTypes.RequestParams['request'];
+}
+
+export interface WatchTransactionParams {
+  transactionHash: string;
+  // updates the data (balance, tokens, nonce etc) of the account currently logged in, if any exists.
+  withUpdateAccountData?: boolean;
+  pollingIntervalMilliseconds?: number;
+  timeoutMilliseconds?: number;
 }

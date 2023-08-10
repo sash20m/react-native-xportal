@@ -2,14 +2,19 @@ import {
   setConnectionConfig,
   updateAccountLoading,
 } from '../../redux/slices/connectionConfig.slice';
+import {updateWallet} from '../../redux/slices/wallet.slice';
 import {store as reduxStore} from '../../redux/store';
 import {
   InitializeParams,
   SendCustomRequestParams,
   SignMessageParams,
   SignTransactionsParams,
+  WatchTransactionParams,
 } from '../types/xPortal.types';
-import {WalletConnectProvider} from '../../services/wallet/walletConnectProvider';
+import {
+  IClientConnect,
+  WalletConnectProvider,
+} from '../../services/wallet/walletConnectProvider';
 import {
   getWalletConnectProvider,
   setWalletConnectProvider,
@@ -17,20 +22,34 @@ import {
 import {resetOnLogout, setConnectionOnLogin} from '../../redux/commonActions';
 import http from '../../services/http';
 import {openXPortal, openXPortalForLogin} from '../../utils/openXPortal';
-import {Address, SignableMessage, Transaction} from '@multiversx/sdk-core';
+import {
+  Address,
+  SignableMessage,
+  Transaction,
+  TransactionWatcher,
+} from '@multiversx/sdk-core';
 import {
   calcTotalFee,
   createSignableTransactions,
 } from '../../services/wallet/utils';
-import {SimpleTransactionType} from '../../types';
+import {
+  ITransactionWatcherTransaction,
+  SimpleTransactionType,
+} from '../../types';
 import {GAS_LIMIT} from '../../constants/gas';
 import BigNumber from 'bignumber.js';
 import {stringIsFloat} from '../../utils/stringsUtils';
 import {
+  selectAccount,
+  selectAccountBalance,
+  selectAccountTokens,
   selectWalletAddress,
   selectWalletBalance,
 } from '../../redux/selectors/wallet.selector';
 import {selectConnectedState} from '../../redux/selectors/connectionConfig.selector';
+import {ProxyNetworkProvider} from '@multiversx/sdk-network-providers/out';
+import {URLS} from '../../constants/urls';
+import {SessionEventTypes} from '@multiversx/sdk-wallet-connect-provider/out';
 
 class XPortal {
   private relayUrl = 'wss://relay.walletconnect.com';
@@ -51,6 +70,25 @@ class XPortal {
     return !!state;
   }
 
+  getFullAccountInfo() {
+    const account = selectAccount();
+    return account;
+  }
+
+  getAccountTokens() {
+    const tokens = selectAccountTokens();
+    const generalBalance = selectAccountBalance();
+    return {
+      balance: generalBalance,
+      tokens,
+    };
+  }
+
+  getAccountBalance() {
+    const balance = selectAccountBalance();
+    return balance;
+  }
+
   async initialize({
     chainId,
     projectId,
@@ -62,7 +100,7 @@ class XPortal {
 
     const options = metadata ? {metadata} : {};
     const connectionProvider = new WalletConnectProvider(
-      callbacks,
+      this.enrichCallbacks(callbacks),
       chainId,
       this.relayUrl,
       projectId,
@@ -86,6 +124,12 @@ class XPortal {
       return;
     }
 
+    console.log(
+      walletConnectProvider.wasConnected,
+      ' ',
+      walletConnectProvider.walletConnector,
+      'e?',
+    );
     if (walletConnectProvider.wasConnected) {
       await walletConnectProvider.reinitialize();
     }
@@ -125,8 +169,8 @@ class XPortal {
       return;
     }
     try {
-      await walletConnectProvider.logout();
       await reduxStore.dispatch(resetOnLogout());
+      await walletConnectProvider.logout();
     } catch (error) {
       console.log('Could not log out');
     }
@@ -149,8 +193,6 @@ class XPortal {
         transactions as SimpleTransactionType[],
       );
     }
-
-    console.log(txToSign, 'eer?');
 
     const accountBalance = selectWalletBalance() || 0;
     const bNtotalFee = calcTotalFee(txToSign as Transaction[], minGasLimit);
@@ -180,7 +222,6 @@ class XPortal {
       console.log('error ', error);
     }
     return null;
-    // get again the balances
   }
 
   async signMessage({
@@ -247,6 +288,81 @@ class XPortal {
       console.log(error);
     }
     return false;
+  }
+
+  async refreshAccountData() {
+    const walletConnectProvider = getWalletConnectProvider();
+
+    const tokens = await http.getAccountTokens(walletConnectProvider.address);
+    const account = await http.getMxAccount(walletConnectProvider.address);
+
+    await reduxStore.dispatch(
+      updateWallet({
+        tokens,
+        ...account,
+      }),
+    );
+
+    return {tokens, ...account};
+  }
+
+  async watchTransaction({
+    transactionHash,
+    withUpdateAccountData,
+    pollingIntervalMilliseconds = 1000,
+    timeoutMilliseconds = 180000,
+  }: WatchTransactionParams) {
+    const provider = new ProxyNetworkProvider(URLS.MULTIVERSX_GATEWAY);
+
+    const transaction: ITransactionWatcherTransaction = {
+      getHash: () => ({
+        hex: () => transactionHash,
+      }),
+    };
+
+    try {
+      const watcher = new TransactionWatcher(provider, {
+        pollingIntervalMilliseconds,
+        timeoutMilliseconds,
+      });
+      const res = await watcher.awaitCompleted(transaction);
+
+      if (res.status.isFailed()) {
+        throw new Error('Transaction failed');
+      }
+
+      if (withUpdateAccountData) {
+        await this.refreshAccountData();
+      }
+
+      return res.status;
+    } catch (error: any) {
+      console.log(error, ' e');
+    }
+  }
+
+  private enrichCallbacks(callbacks: IClientConnect) {
+    const newCallbacks = {
+      onClientLogin: () => {
+        // some future needed code on login
+        // ...
+
+        callbacks.onClientLogin();
+      },
+      onClientLogout: async () => {
+        await reduxStore.dispatch(resetOnLogout());
+
+        callbacks.onClientLogout();
+      },
+      onClientEvent: (event: SessionEventTypes['event']) => {
+        // some future needed code on event
+        // ...
+
+        callbacks.onClientEvent(event);
+      },
+    };
+
+    return newCallbacks;
   }
 }
 

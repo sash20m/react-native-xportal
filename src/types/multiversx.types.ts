@@ -67,3 +67,9 @@ export interface SimpleTransactionType {
   guardianSignature?: string;
   nonce?: number;
 }
+
+export interface ITransactionWatcherTransaction {
+  getHash(): {
+    hex(): string;
+  };
+}

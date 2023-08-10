@@ -125,6 +125,18 @@ export class WalletConnectProvider {
       ? {metadata: this.options.metadata}
       : {};
 
+    if (
+      !(
+        this.onClientConnect &&
+        this.chainId &&
+        this.walletConnectRelay &&
+        this.walletConnectProjectId &&
+        !!options.metadata
+      )
+    ) {
+      return false;
+    }
+
     const connectionProvider = new WalletConnectProvider(
       this.onClientConnect,
       this.chainId,
@@ -165,13 +177,16 @@ export class WalletConnectProvider {
     approval: () => Promise<SessionTypes.Struct>;
   }> {
     if (typeof this.walletConnector === 'undefined') {
+      // const status = this.reinitialize();
+      // if (!status) {
       throw new Error(WalletConnectProviderErrorMessagesEnum.notInitialized);
+      // }
     }
 
     const connectParams = getConnectionParams(this.chainId, options);
 
     try {
-      const response = await this.walletConnector.connect({
+      const response = await this?.walletConnector?.connect({
         pairingTopic: options?.topic,
         ...connectParams,
       });
@@ -370,7 +385,7 @@ export class WalletConnectProvider {
 
     if (typeof this.session === 'undefined') {
       Logger.error(WalletConnectProviderErrorMessagesEnum.sessionNotConnected);
-      this.onClientConnect.onClientLogout();
+      await this.onClientConnect.onClientLogout();
       throw new Error(
         WalletConnectProviderErrorMessagesEnum.sessionNotConnected,
       );
@@ -429,7 +444,7 @@ export class WalletConnectProvider {
 
     if (typeof this.session === 'undefined') {
       Logger.error(WalletConnectProviderErrorMessagesEnum.sessionNotConnected);
-      this.onClientConnect.onClientLogout();
+      await this.onClientConnect.onClientLogout();
       throw new Error(
         WalletConnectProviderErrorMessagesEnum.sessionNotConnected,
       );
@@ -476,7 +491,7 @@ export class WalletConnectProvider {
 
     if (typeof this.session === 'undefined') {
       Logger.error(WalletConnectProviderErrorMessagesEnum.sessionNotConnected);
-      this.onClientConnect.onClientLogout();
+      await this.onClientConnect.onClientLogout();
       throw new Error(
         WalletConnectProviderErrorMessagesEnum.sessionNotConnected,
       );
@@ -551,7 +566,7 @@ export class WalletConnectProvider {
 
     if (typeof this.session === 'undefined') {
       Logger.error(WalletConnectProviderErrorMessagesEnum.sessionNotConnected);
-      this.onClientConnect.onClientLogout();
+      await this.onClientConnect.onClientLogout();
       throw new Error(
         WalletConnectProviderErrorMessagesEnum.sessionNotConnected,
       );
@@ -623,8 +638,9 @@ export class WalletConnectProvider {
       if (options.signature) {
         this.signature = options.signature;
       }
-      this.onClientConnect.onClientLogin();
+      await this.onClientConnect.onClientLogin();
 
+      console.log('am I here ?');
       return this.address;
     }
 
@@ -647,6 +663,7 @@ export class WalletConnectProvider {
     }
 
     this.session = options.session;
+    this.wasConnected = true;
 
     const address = getAddressFromSession(options.session);
 
@@ -674,13 +691,13 @@ export class WalletConnectProvider {
 
       if (this.address && !this.isInitializing && existingPairings) {
         if (existingPairings?.length === 0) {
-          this.onClientConnect.onClientLogout();
+          await this.onClientConnect.onClientLogout();
         } else {
           const lastActivePairing =
             existingPairings[existingPairings.length - 1];
 
           if (lastActivePairing?.topic === topic) {
-            this.onClientConnect.onClientLogout();
+            await this.onClientConnect.onClientLogout();
           }
         }
       }
@@ -712,7 +729,7 @@ export class WalletConnectProvider {
     ) {
       const eventData = event.data;
 
-      this.onClientConnect.onClientEvent(eventData);
+      await this.onClientConnect.onClientEvent(eventData);
     }
   }
 
@@ -738,7 +755,7 @@ export class WalletConnectProvider {
 
       client.on('session_delete', async ({topic}) => {
         if (this.isInitializing) {
-          this.onClientConnect.onClientLogout();
+          await this.onClientConnect.onClientLogout();
           this.reset();
         }
 
@@ -748,7 +765,7 @@ export class WalletConnectProvider {
 
         Logger.error(WalletConnectProviderErrorMessagesEnum.sessionDeleted);
 
-        this.onClientConnect.onClientLogout();
+        await this.onClientConnect.onClientLogout();
 
         this.reset();
         await this.cleanupPendingPairings({deletePairings: true});
@@ -760,7 +777,7 @@ export class WalletConnectProvider {
         }
 
         Logger.error(WalletConnectProviderErrorMessagesEnum.sessionExpired);
-        this.onClientConnect.onClientLogout();
+        await this.onClientConnect.onClientLogout();
 
         this.reset();
         await this.cleanupPendingPairings({deletePairings: true});

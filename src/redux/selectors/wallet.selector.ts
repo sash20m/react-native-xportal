@@ -9,3 +9,21 @@ export const selectWalletBalance = () => {
   const state = reduxStore.getState();
   return state.walletSlice.balance;
 };
+
+export const selectAccount = () => {
+  const state = reduxStore.getState().walletSlice;
+
+  delete state.walletConnectSession;
+
+  return state;
+};
+
+export const selectAccountTokens = () => {
+  const state = reduxStore.getState();
+  return state.walletSlice.tokens;
+};
+
+export const selectAccountBalance = () => {
+  const state = reduxStore.getState();
+  return state.walletSlice.balance;
+};

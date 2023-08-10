@@ -35,7 +35,6 @@ export const connectionConfigSlice = createSlice({
       state: ConnectionConfigSlice,
       action: PayloadAction<ConnectionConfigSlice>,
     ) => {
-      console.log(action, ' e?');
       return {...state, isAccountLoading: action.payload.isAccountLoading};
     },
   },
@@ -46,6 +45,7 @@ export const connectionConfigSlice = createSlice({
           ...initialState,
           chainId: state.chainId,
           projectId: state.projectId,
+          connected: false,
         };
       })
       .addCase(
