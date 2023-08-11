@@ -60,7 +60,7 @@ export interface SimpleTransactionType {
   data?: string;
   gasPrice?: number;
   gasLimit?: number;
-  chainID?: string;
+  chainId: string;
   version?: number;
   options?: number;
   guardian?: string;

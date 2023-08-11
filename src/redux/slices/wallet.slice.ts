@@ -14,7 +14,7 @@ export interface Tokens {
 export interface WalletSlice extends MxAccount {
   address?: string;
   walletConnectSession?: SessionTypes.Struct;
-  tokens?: Tokens;
+  tokens?: Tokens[];
 }
 
 const initialState: WalletSlice = {};

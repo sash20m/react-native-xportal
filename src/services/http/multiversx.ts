@@ -2,10 +2,14 @@ import axios from 'axios';
 import {getMultiversxApi} from '../../utils/getMultiversxApi';
 import {ACCOUNTS_ENDPOINT} from '../../constants/mxEndpoints';
 import {MxAccount} from '../../types';
+import {Tokens} from '../../redux/slices/wallet.slice';
 
-export const getAccountTokens = async (address: string) => {
+/**
+ * Obtains all the tokens for a given address
+ */
+export const getAccountTokens = async (address: string): Promise<Tokens[]> => {
   const mxApi = await getMultiversxApi();
-  const url = mxApi + `/accounts/${address}/tokens`;
+  const url = mxApi + `/${ACCOUNTS_ENDPOINT}/${address}/tokens`;
   const {data} = await axios.get(url);
 
   const tokens = data.map((token: any) => {
@@ -31,7 +35,12 @@ export const getAccountTokens = async (address: string) => {
   return tokens;
 };
 
-export const getMxAccount = async (address?: string) => {
+/**
+ * Obtains the account information for a given address that is provided
+ * by the multiversx api. This comes to complete the information that is
+ * obtained from the wallet directly via walletconnect.
+ */
+export const getMxAccount = async (address?: string): Promise<MxAccount> => {
   if (!address) {
     return {};
   }

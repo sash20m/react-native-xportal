@@ -3,7 +3,13 @@ import {
   getEncodedXPortalLoginSchemaUrl,
   getXPortalSchemaUrl,
 } from '../services/wallet/xportalDeeplink';
+import {ERROR_MESSAGES} from '../constants/errorMessages';
+import {errorComposer} from './errorComposer';
 
+/**
+ * Opens XPortal with the intent to show the approve/cancel connection
+ * screen with the DAPP.
+ */
 export const openXPortalForLogin = (connectorUri: string | undefined): void => {
   try {
     const encodedSchemaUrl = getEncodedXPortalLoginSchemaUrl(connectorUri);
@@ -16,10 +22,19 @@ export const openXPortalForLogin = (connectorUri: string | undefined): void => {
       })
       .catch(err => console.log(err));
   } catch (error) {
-    throw Error('Could not open XPortal');
+    throw new Error(
+      errorComposer({
+        message: ERROR_MESSAGES.XPORTAL_OPEN_FAIL,
+        data: error,
+      }),
+    );
   }
 };
 
+/**
+ * Simply redirects the user to XPortal by opening it or switching to it
+ * on the phone screen.
+ */
 export const openXPortal = () => {
   try {
     const encodedSchemaUrl = getXPortalSchemaUrl();
@@ -31,6 +46,11 @@ export const openXPortal = () => {
       })
       .catch(err => console.log(err));
   } catch (error) {
-    throw Error('Could not open XPortal');
+    throw new Error(
+      errorComposer({
+        message: ERROR_MESSAGES.XPORTAL_OPEN_FAIL,
+        data: error,
+      }),
+    );
   }
 };

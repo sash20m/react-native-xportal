@@ -1,5 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
-import {LOGIN_ACTION, LOGOUT_ACTION} from './types/actionsEnum';
+import {LOGIN_ACTION, LOGOUT_ACTION} from '../types';
 
 export const resetOnLogout = createAction(LOGOUT_ACTION);
 

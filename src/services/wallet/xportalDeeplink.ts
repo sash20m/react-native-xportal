@@ -5,6 +5,11 @@ export function getXPortalSchemaUrl(): string {
   return walletConnectDeepLink;
 }
 
+/**
+ * This function is used alongside the wallet connect uri
+ * when the user wants to connect XPortal. With the returned url
+ * the user can be redirected to XPortal to accept the incoming connection.
+ */
 export function getEncodedXPortalLoginSchemaUrl(
   wcUri: string | undefined,
 ): string {
@@ -12,13 +17,6 @@ export function getEncodedXPortalLoginSchemaUrl(
     return '';
   }
   return `${walletConnectDeepLink}?wallet-connect=${encodeURIComponent(wcUri)}`;
-}
-
-export function getXPortalLoginSchemaUrl(wcUri: string | undefined): string {
-  if (!wcUri) {
-    return '';
-  }
-  return `${walletConnectDeepLink}?wallet-connect=${wcUri}`;
 }
 
 // cSpell:ignore xPortal

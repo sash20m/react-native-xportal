@@ -177,10 +177,7 @@ export class WalletConnectProvider {
     approval: () => Promise<SessionTypes.Struct>;
   }> {
     if (typeof this.walletConnector === 'undefined') {
-      // const status = this.reinitialize();
-      // if (!status) {
       throw new Error(WalletConnectProviderErrorMessagesEnum.notInitialized);
-      // }
     }
 
     const connectParams = getConnectionParams(this.chainId, options);
@@ -640,7 +637,6 @@ export class WalletConnectProvider {
       }
       await this.onClientConnect.onClientLogin();
 
-      console.log('am I here ?');
       return this.address;
     }
 

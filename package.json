@@ -3,10 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "react-native run-ios",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
-    "web": "expo start --web"
+    "build": "tsc"
   },
   "dependencies": {
     "@multiversx/sdk-core": "^12.6.0",
@@ -33,6 +30,7 @@
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.1",
     "events": "^1.0.0",
+    "global": "^4.4.0",
     "https-browserify": "~0.0.0",
     "path-browserify": "0.0.0",
     "process": "^0.11.0",
@@ -55,6 +53,7 @@
     "text-encoding": "^0.7.0",
     "timers-browserify": "^1.0.1",
     "tty-browserify": "0.0.0",
+    "typescript": "^5.1.6",
     "url": "~0.10.1",
     "util": "~0.10.3",
     "vm-browserify": "0.0.4"
@@ -89,7 +88,8 @@
     "@babel/core": "^7.20.0"
   },
   "peerDependencies": {
-    "@multiversx/sdk-core": ">= 12.1.0"
+    "@multiversx/sdk-core": ">= 12.1.0",
+    "react-native": ">=0.60"
   },
   "description": "A library that connects the mobile app to the MultiversX's xPortal mobile wallet.",
   "keywords": [

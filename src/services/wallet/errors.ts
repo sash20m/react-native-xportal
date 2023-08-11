@@ -29,9 +29,8 @@ export class ErrBadAddress extends Err {
 }
 
 /**
- * WalletConnect  Error Messages
+ * WalletConnect Error Messages
  */
-
 export enum WalletConnectProviderErrorMessagesEnum {
   unableToInit = 'WalletConnect is unable to init',
   notInitialized = 'WalletConnect is not initialized',

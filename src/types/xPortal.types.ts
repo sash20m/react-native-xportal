@@ -1,7 +1,8 @@
 import {Transaction} from '@multiversx/sdk-core/out';
-import {IClientConnect} from '../../services/wallet/walletConnectProvider';
-import {ChainEnum, SimpleTransactionType} from '../../types';
+import {IClientConnect} from '../services/wallet/walletConnectProvider';
+import {ChainEnum, MxAccount, SimpleTransactionType} from '../types';
 import {EngineTypes} from '@walletconnect/types';
+import {Tokens} from '../redux/slices/wallet.slice';
 
 export interface ConnectionMetadata {
   description: string;
@@ -32,8 +33,15 @@ export interface SendCustomRequestParams {
 
 export interface WatchTransactionParams {
   transactionHash: string;
-  // updates the data (balance, tokens, nonce etc) of the account currently logged in, if any exists.
-  withUpdateAccountData?: boolean;
   pollingIntervalMilliseconds?: number;
   timeoutMilliseconds?: number;
+
+  /**
+   * Updates the data (balance, tokens, nonce etc) of the account currently logged in, if any exists.
+   */
+  withUpdateAccountData?: boolean;
+}
+
+export interface RefreshAccountResponse extends MxAccount {
+  tokens: Tokens[];
 }

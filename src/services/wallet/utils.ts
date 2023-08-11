@@ -249,7 +249,7 @@ export async function createSignableTransactions(
       value,
       receiver,
       data = '',
-      chainID,
+      chainId,
       version = 1,
       options,
       gasPrice = GAS_PRICE,
@@ -267,11 +267,11 @@ export async function createSignableTransactions(
       const addr = new Address(receiver);
       validatedReceiver = addr.hex();
     } catch (err) {
-      console.log('invalid receiver');
+      console.warn('Invalid receiver');
     }
 
     const storeChainId = selectChainID() || 'd';
-    const txChainId = chainID?.toString().toLowerCase() || null;
+    const txChainId = chainId?.toString().toLowerCase() || null;
 
     if (txChainId && txChainId !== storeChainId) {
       throw Error(
