@@ -3,7 +3,7 @@ interface ErrorFormat {
   data?: any;
 }
 
-export const errorComposer = ({message, data}: ErrorFormat) => {
+export const errorComposer = ({ message, data }: ErrorFormat) => {
   if (!data) {
     return message;
   }

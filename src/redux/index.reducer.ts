@@ -1,10 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {persistReducer} from 'redux-persist';
-import walletReducer, {WalletSlice} from './slices/wallet.slice';
-import connectionConfigReducer, {
-  ConnectionConfigSlice,
-} from './slices/connectionConfig.slice';
-import {combineReducers} from 'redux';
+import { persistReducer } from 'redux-persist';
+import walletReducer, { WalletSlice } from './slices/wallet.slice';
+import connectionConfigReducer, { ConnectionConfigSlice } from './slices/connectionConfig.slice';
+import { combineReducers } from 'redux';
 
 export interface ReduxStateSlices {
   walletSlice: WalletSlice;

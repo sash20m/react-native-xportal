@@ -1,19 +1,11 @@
-import {configureStore} from '@reduxjs/toolkit';
-import {
-  FLUSH,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
-  REHYDRATE,
-  persistStore,
-} from 'redux-persist';
+import { configureStore } from '@reduxjs/toolkit';
+import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistStore } from 'redux-persist';
 import indexReducer from './index.reducer';
-import {createSubscription} from 'react-redux/es/utils/Subscription';
+import { createSubscription } from 'react-redux/es/utils/Subscription';
 
 export const store = configureStore({
   reducer: indexReducer,
-  middleware: getDefaultMiddleware =>
+  middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],

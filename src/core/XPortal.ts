@@ -2,8 +2,8 @@ import {
   updateAccountLoading,
   updateConnectionConfig,
 } from '../redux/slices/connectionConfig.slice';
-import {updateWallet} from '../redux/slices/wallet.slice';
-import {store as reduxStore} from '../redux/store';
+import { updateWallet } from '../redux/slices/wallet.slice';
+import { store as reduxStore } from '../redux/store';
 import {
   InitializeParams,
   RefreshAccountResponse,
@@ -12,17 +12,11 @@ import {
   SignTransactionsParams,
   WatchTransactionParams,
 } from '../types/xPortal.types';
-import {
-  IClientConnect,
-  WalletConnectProvider,
-} from '../services/wallet/walletConnectProvider';
-import {
-  getWalletConnectProvider,
-  setWalletConnectProvider,
-} from './connectionProvider';
-import {resetOnLogout, setConnectionOnLogin} from '../redux/commonActions';
+import { IClientConnect, WalletConnectProvider } from '../services/wallet/walletConnectProvider';
+import { getWalletConnectProvider, setWalletConnectProvider } from './connectionProvider';
+import { resetOnLogout, setConnectionOnLogin } from '../redux/commonActions';
 import http from '../services/http';
-import {openXPortal, openXPortalForLogin} from '../utils/openXPortal';
+import { openXPortal, openXPortalForLogin } from '../utils/openXPortal';
 import {
   Address,
   ITransactionStatus,
@@ -30,14 +24,11 @@ import {
   Transaction,
   TransactionWatcher,
 } from '@multiversx/sdk-core';
-import {
-  calcTotalFee,
-  createSignableTransactions,
-} from '../services/wallet/utils';
-import {ITransactionWatcherTransaction, SimpleTransactionType} from '../types';
-import {GAS_LIMIT} from '../constants/gas';
+import { calcTotalFee, createSignableTransactions } from '../services/wallet/utils';
+import { ITransactionWatcherTransaction, SimpleTransactionType } from '../types';
+import { GAS_LIMIT } from '../constants/gas';
 import BigNumber from 'bignumber.js';
-import {stringIsFloat} from '../utils/stringsUtils';
+import { stringIsFloat } from '../utils/stringsUtils';
 import {
   selectAccount,
   selectAccountBalance,
@@ -45,13 +36,13 @@ import {
   selectWalletAddress,
   selectWalletBalance,
 } from '../redux/selectors/wallet.selector';
-import {selectConnectedState} from '../redux/selectors/connectionConfig.selector';
-import {ProxyNetworkProvider} from '@multiversx/sdk-network-providers/out';
-import {URLS} from '../constants/urls';
-import {SessionEventTypes} from '@multiversx/sdk-wallet-connect-provider/out';
-import {ERROR_MESSAGES} from '../constants/errorMessages';
-import {validateInitParams} from '../utils/validators/initializeParamsValidator';
-import {errorComposer} from '../utils/errorComposer';
+import { selectConnectedState } from '../redux/selectors/connectionConfig.selector';
+import { ProxyNetworkProvider } from '@multiversx/sdk-network-providers/out';
+import { URLS } from '../constants/urls';
+import { SessionEventTypes } from '@multiversx/sdk-wallet-connect-provider/out';
+import { ERROR_MESSAGES } from '../constants/errorMessages';
+import { validateInitParams } from '../utils/validators/initializeParamsValidator';
+import { errorComposer } from '../utils/errorComposer';
 
 class XPortal {
   private relayUrl = 'wss://relay.walletconnect.com';
@@ -113,38 +104,33 @@ class XPortal {
     metadata,
     callbacks,
   }: InitializeParams): Promise<boolean> {
-    if (!validateInitParams({chainId, projectId, metadata, callbacks})) {
+    if (!validateInitParams({ chainId, projectId, metadata, callbacks })) {
       throw new Error(ERROR_MESSAGES.MISSING_INIT_PARAMS);
     }
 
     try {
-      await reduxStore.dispatch(updateConnectionConfig({chainId, projectId}));
+      await reduxStore.dispatch(updateConnectionConfig({ chainId, projectId }));
 
-      const options = metadata ? {metadata} : {};
+      const options = metadata ? { metadata } : {};
       const connectionProvider = new WalletConnectProvider(
         this.enrichCallbacks(callbacks),
         chainId,
         this.relayUrl,
         projectId,
-        options,
+        options
       );
       await connectionProvider.init();
 
       setWalletConnectProvider(connectionProvider);
       return true;
     } catch (error) {
-      throw new Error(
-        errorComposer({message: ERROR_MESSAGES.INIT_FAILED, data: error}),
-      );
+      throw new Error(errorComposer({ message: ERROR_MESSAGES.INIT_FAILED, data: error }));
     }
   }
 
   async login(): Promise<Boolean> {
     const walletConnectProvider = getWalletConnectProvider();
-    if (
-      !walletConnectProvider?.walletConnector &&
-      !walletConnectProvider.wasConnected
-    ) {
+    if (!walletConnectProvider?.walletConnector && !walletConnectProvider.wasConnected) {
       throw new Error(ERROR_MESSAGES.XPORTAL_NOT_INITIALIZED);
     }
 
@@ -153,13 +139,12 @@ class XPortal {
     }
 
     try {
-      const {uri: connectorUri, approval} =
-        await walletConnectProvider.connect();
+      const { uri: connectorUri, approval } = await walletConnectProvider.connect();
 
       openXPortalForLogin(connectorUri);
 
-      await reduxStore.dispatch(updateAccountLoading({isAccountLoading: true}));
-      await walletConnectProvider.login({approval});
+      await reduxStore.dispatch(updateAccountLoading({ isAccountLoading: true }));
+      await walletConnectProvider.login({ approval });
 
       const tokens = await http.getAccountTokens(walletConnectProvider.address);
       const account = await http.getMxAccount(walletConnectProvider.address);
@@ -170,16 +155,14 @@ class XPortal {
           tokens,
           walletConnectSession: walletConnectProvider.session,
           ...account,
-        }),
+        })
       );
 
       setWalletConnectProvider(walletConnectProvider);
 
       return true;
     } catch (error: any) {
-      throw new Error(
-        errorComposer({message: ERROR_MESSAGES.LOGIN_FAILED, data: error}),
-      );
+      throw new Error(errorComposer({ message: ERROR_MESSAGES.LOGIN_FAILED, data: error }));
     }
   }
 
@@ -194,9 +177,7 @@ class XPortal {
       await walletConnectProvider.logout();
       return true;
     } catch (error) {
-      throw new Error(
-        errorComposer({message: ERROR_MESSAGES.LOGIN_FAILED, data: error}),
-      );
+      throw new Error(errorComposer({ message: ERROR_MESSAGES.LOGIN_FAILED, data: error }));
     }
   }
 
@@ -210,25 +191,19 @@ class XPortal {
     }
 
     try {
-      const transactionsPayload = Array.isArray(transactions)
-        ? transactions
-        : [transactions];
+      const transactionsPayload = Array.isArray(transactions) ? transactions : [transactions];
 
       const areComplexTransactions = transactionsPayload.every(
-        tx => Object.getPrototypeOf(tx).toPlainObject != null,
+        (tx) => Object.getPrototypeOf(tx).toPlainObject != null
       );
       let txToSign = transactionsPayload;
       if (!areComplexTransactions) {
-        txToSign = await createSignableTransactions(
-          transactions as SimpleTransactionType[],
-        );
+        txToSign = await createSignableTransactions(transactions as SimpleTransactionType[]);
       }
 
       const accountBalance = selectWalletBalance() || 0;
       const bNtotalFee = calcTotalFee(txToSign as Transaction[], minGasLimit);
-      const bNbalance = new BigNumber(
-        stringIsFloat(String(accountBalance)) ? accountBalance : '0',
-      );
+      const bNbalance = new BigNumber(stringIsFloat(String(accountBalance)) ? accountBalance : '0');
       const hasSufficientFunds = bNbalance.minus(bNtotalFee).isGreaterThan(0);
       if (!hasSufficientFunds) {
         throw new Error(ERROR_MESSAGES.INSUFFICIENT_FUNDS);
@@ -242,7 +217,7 @@ class XPortal {
 
       try {
         const signedTransaction = await walletConnectProvider.signTransactions(
-          txToSign as Transaction[],
+          txToSign as Transaction[]
         );
 
         return signedTransaction;
@@ -251,7 +226,7 @@ class XPortal {
           errorComposer({
             message: ERROR_MESSAGES.SIGN_TX_FAILED,
             data: error,
-          }),
+          })
         );
       }
     } catch (error) {
@@ -259,12 +234,12 @@ class XPortal {
         errorComposer({
           message: ERROR_MESSAGES.SIGN_TX_PREPARATION_FAILED,
           data: error,
-        }),
+        })
       );
     }
   }
 
-  async signMessage({message}: SignMessageParams): Promise<SignableMessage> {
+  async signMessage({ message }: SignMessageParams): Promise<SignableMessage> {
     const walletConnectProvider = getWalletConnectProvider();
     if (!walletConnectProvider?.walletConnector) {
       throw new Error(ERROR_MESSAGES.XPORTAL_NOT_INITIALIZED);
@@ -286,9 +261,7 @@ class XPortal {
         console.warn('Sign Transaction in xPortal wallet');
       }
 
-      const signedMessage = await walletConnectProvider.signMessage(
-        signableMessage,
-      );
+      const signedMessage = await walletConnectProvider.signMessage(signableMessage);
 
       return signedMessage;
     } catch (error) {
@@ -296,12 +269,12 @@ class XPortal {
         errorComposer({
           message: ERROR_MESSAGES.SIGN_MESSAGE_FAILED,
           data: error,
-        }),
+        })
       );
     }
   }
 
-  async sendCustomRequest({request}: SendCustomRequestParams): Promise<any> {
+  async sendCustomRequest({ request }: SendCustomRequestParams): Promise<any> {
     const walletConnectProvider = getWalletConnectProvider();
     if (!walletConnectProvider?.walletConnector) {
       throw new Error(ERROR_MESSAGES.XPORTAL_NOT_INITIALIZED);
@@ -326,7 +299,7 @@ class XPortal {
         errorComposer({
           message: ERROR_MESSAGES.CUSTOM_RQ_FAILED,
           data: error,
-        }),
+        })
       );
     }
   }
@@ -346,7 +319,7 @@ class XPortal {
         errorComposer({
           message: ERROR_MESSAGES.FAILED_PING,
           data: error,
-        }),
+        })
       );
     }
   }
@@ -364,16 +337,16 @@ class XPortal {
         updateWallet({
           tokens,
           ...account,
-        }),
+        })
       );
 
-      return {tokens, ...account};
+      return { tokens, ...account };
     } catch (error) {
       throw new Error(
         errorComposer({
           message: ERROR_MESSAGES.FAILED_REFRESH_ACCOUNT,
           data: error,
-        }),
+        })
       );
     }
   }
@@ -413,7 +386,7 @@ class XPortal {
         errorComposer({
           message: ERROR_MESSAGES.WATCHER_ERROR,
           data: error,
-        }),
+        })
       );
     }
   }

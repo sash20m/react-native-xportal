@@ -1,5 +1,5 @@
-import {SignableMessage, Transaction} from '@multiversx/sdk-core';
-import {EngineTypes} from '@multiversx/sdk-wallet-connect-provider';
+import { SignableMessage, Transaction } from '@multiversx/sdk-core';
+import { EngineTypes } from '@multiversx/sdk-wallet-connect-provider';
 
 export interface ProviderFeatureOptions {
   callbackUrl?: string;
@@ -14,27 +14,16 @@ export interface ConnectionProvider {
   isConnected(): Promise<boolean>;
   sendTransaction?(
     transaction: Transaction,
-    options?: ProviderFeatureOptions,
+    options?: ProviderFeatureOptions
   ): Promise<Transaction | void>;
-  signTransaction(
-    transaction: Transaction,
-    options?: ProviderFeatureOptions,
-  ): Promise<Transaction>;
+  signTransaction(transaction: Transaction, options?: ProviderFeatureOptions): Promise<Transaction>;
   signTransactions(
     transactions: Transaction[],
-    options?: ProviderFeatureOptions,
+    options?: ProviderFeatureOptions
   ): Promise<Transaction[]>;
   signMessage(message: SignableMessage): Promise<SignableMessage>;
-  sendCustomMessage?({
-    method,
-    params,
-  }: {
-    method: string;
-    params: any;
-  }): Promise<any>;
-  sendCustomRequest?(options?: {
-    request: EngineTypes.RequestParams['request'];
-  }): Promise<any>;
+  sendCustomMessage?({ method, params }: { method: string; params: any }): Promise<any>;
+  sendCustomRequest?(options?: { request: EngineTypes.RequestParams['request'] }): Promise<any>;
   ping?(): Promise<boolean>;
   relogin?: () => Promise<void>;
 }

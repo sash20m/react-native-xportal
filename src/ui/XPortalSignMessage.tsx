@@ -1,27 +1,16 @@
-import React, {useState} from 'react';
-import {
-  ActivityIndicator,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {xPortalSingleton as XPortal} from '../core/XPortal';
-import {XPortalSignMessageProps} from '../types/xportalUi.types';
+import React, { useState } from 'react';
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { xPortalSingleton as XPortal } from '../core/XPortal';
+import { XPortalSignMessageProps } from '../types/xportalUi.types';
 
-const XPortalSignMessage = ({
-  message,
-  style,
-  content,
-  callback,
-}: XPortalSignMessageProps) => {
+const XPortalSignMessage = ({ message, style, content, callback }: XPortalSignMessageProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const xPortalLogout = async () => {
     try {
       setIsLoading(true);
 
-      const response = await XPortal.signMessage({message});
+      const response = await XPortal.signMessage({ message });
       callback(response);
 
       setIsLoading(false);
@@ -32,18 +21,12 @@ const XPortalSignMessage = ({
   };
 
   return (
-    <TouchableOpacity
-      style={[buttonStyle.container, style]}
-      onPress={xPortalLogout}>
+    <TouchableOpacity style={[buttonStyle.container, style]} onPress={xPortalLogout}>
       {content ? (
         content
       ) : (
         <View>
-          {isLoading ? (
-            <ActivityIndicator />
-          ) : (
-            <Text style={buttonStyle.text}>Sign Message</Text>
-          )}
+          {isLoading ? <ActivityIndicator /> : <Text style={buttonStyle.text}>Sign Message</Text>}
         </View>
       )}
     </TouchableOpacity>

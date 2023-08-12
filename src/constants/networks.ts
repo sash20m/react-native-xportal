@@ -1,9 +1,6 @@
-import {EnvironmentsEnum, NetworkType} from '../types';
+import { EnvironmentsEnum, NetworkType } from '../types';
 
-export const networkConfigurations: Record<
-  keyof typeof EnvironmentsEnum,
-  NetworkType
-> = {
+export const networkConfigurations: Record<keyof typeof EnvironmentsEnum, NetworkType> = {
   devnet: {
     id: 'devnet',
     chainId: 'D',

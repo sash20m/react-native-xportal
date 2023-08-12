@@ -1,4 +1,4 @@
-import {store as reduxStore} from '../../redux/store';
+import { store as reduxStore } from '../../redux/store';
 
 export const selectChainID = () => {
   const state = reduxStore.getState();

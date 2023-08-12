@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {resetOnLogout, setConnectionOnLogin} from '../commonActions';
-import {ChainEnum} from '../../types';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { resetOnLogout, setConnectionOnLogin } from '../commonActions';
+import { ChainEnum } from '../../types';
 
 export interface ConnectionConfigSlice {
   connected?: boolean;
@@ -20,27 +20,27 @@ export const connectionConfigSlice = createSlice({
   reducers: {
     setConnectionConfig: (
       state: ConnectionConfigSlice,
-      action: PayloadAction<ConnectionConfigSlice>,
+      action: PayloadAction<ConnectionConfigSlice>
     ) => {
       return action.payload;
     },
     updateConnectionConfig: (
       state: ConnectionConfigSlice,
-      action: PayloadAction<ConnectionConfigSlice>,
+      action: PayloadAction<ConnectionConfigSlice>
     ) => {
-      return {...state, ...action.payload};
+      return { ...state, ...action.payload };
     },
     resetConnectionConfig: (state: ConnectionConfigSlice) => {
       return initialState;
     },
     updateAccountLoading: (
       state: ConnectionConfigSlice,
-      action: PayloadAction<ConnectionConfigSlice>,
+      action: PayloadAction<ConnectionConfigSlice>
     ) => {
-      return {...state, isAccountLoading: action.payload.isAccountLoading};
+      return { ...state, isAccountLoading: action.payload.isAccountLoading };
     },
   },
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
       .addCase(resetOnLogout, (state: ConnectionConfigSlice) => {
         return {
@@ -52,16 +52,13 @@ export const connectionConfigSlice = createSlice({
       })
       .addCase(
         setConnectionOnLogin,
-        (
-          state: ConnectionConfigSlice,
-          action: PayloadAction<ConnectionConfigSlice>,
-        ) => {
+        (state: ConnectionConfigSlice, action: PayloadAction<ConnectionConfigSlice>) => {
           return {
             ...state,
             connected: true,
             isAccountLoading: false,
           };
-        },
+        }
       );
   },
 });

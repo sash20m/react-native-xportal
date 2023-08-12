@@ -1,8 +1,8 @@
-import {Transaction} from '@multiversx/sdk-core/out';
-import {IClientConnect} from '../services/wallet/walletConnectProvider';
-import {ChainEnum, MxAccount, SimpleTransactionType} from '../types';
-import {EngineTypes} from '@walletconnect/types';
-import {Tokens} from '../redux/slices/wallet.slice';
+import { Transaction } from '@multiversx/sdk-core/out';
+import { IClientConnect } from '../services/wallet/walletConnectProvider';
+import { ChainEnum, MxAccount, SimpleTransactionType } from '../types';
+import { EngineTypes } from '@walletconnect/types';
+import { Tokens } from '../redux/slices/wallet.slice';
 
 export interface ConnectionMetadata {
   description: string;

@@ -1,6 +1,6 @@
-import {URLS} from '../constants/urls';
-import {selectChainID} from '../redux/selectors/connectionConfig.selector';
-import {ChainEnum} from '../types';
+import { URLS } from '../constants/urls';
+import { selectChainID } from '../redux/selectors/connectionConfig.selector';
+import { ChainEnum } from '../types';
 
 export const getMultiversxApi = async () => {
   const chainId: string | undefined = await selectChainID();

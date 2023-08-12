@@ -1,10 +1,10 @@
-import {Linking, Platform} from 'react-native';
+import { Linking, Platform } from 'react-native';
 import {
   getEncodedXPortalLoginSchemaUrl,
   getXPortalSchemaUrl,
 } from '../services/wallet/xportalDeeplink';
-import {ERROR_MESSAGES} from '../constants/errorMessages';
-import {errorComposer} from './errorComposer';
+import { ERROR_MESSAGES } from '../constants/errorMessages';
+import { errorComposer } from './errorComposer';
 
 /**
  * Opens XPortal with the intent to show the approve/cancel connection
@@ -15,18 +15,18 @@ export const openXPortalForLogin = (connectorUri: string | undefined): void => {
     const encodedSchemaUrl = getEncodedXPortalLoginSchemaUrl(connectorUri);
 
     Linking.canOpenURL(encodedSchemaUrl)
-      .then(supported => {
+      .then((supported) => {
         if (supported || Platform.OS === 'android') {
           return Linking.openURL(encodedSchemaUrl);
         }
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   } catch (error) {
     throw new Error(
       errorComposer({
         message: ERROR_MESSAGES.XPORTAL_OPEN_FAIL,
         data: error,
-      }),
+      })
     );
   }
 };
@@ -39,18 +39,18 @@ export const openXPortal = () => {
   try {
     const encodedSchemaUrl = getXPortalSchemaUrl();
     Linking.canOpenURL(encodedSchemaUrl)
-      .then(supported => {
+      .then((supported) => {
         if (supported || Platform.OS === 'android') {
           return Linking.openURL(encodedSchemaUrl);
         }
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   } catch (error) {
     throw new Error(
       errorComposer({
         message: ERROR_MESSAGES.XPORTAL_OPEN_FAIL,
         data: error,
-      }),
+      })
     );
   }
 };

@@ -1,4 +1,4 @@
-import {Buffer} from 'buffer';
+import { Buffer } from 'buffer';
 
 export function isStringBase64(str: string) {
   try {
@@ -9,8 +9,7 @@ export function isStringBase64(str: string) {
     const bufferFromEncoded = Buffer.from(bufferFromDecoded).toString('base64');
 
     // If the result is equal to the initial string
-    const isEqualToInitialString =
-      str === btoaEncoded && str === bufferFromEncoded;
+    const isEqualToInitialString = str === btoaEncoded && str === bufferFromEncoded;
 
     // or the atob() conversion is equal to the Buffer.from('base64')
     const isAtobEqualToBufferFrom = atobDecoded === bufferFromDecoded;
@@ -28,19 +27,14 @@ export function isStringBase64(str: string) {
 
 import BigNumber from 'bignumber.js';
 
-export const stringIsInteger = (
-  integer: string,
-  positiveNumbersOnly = true,
-) => {
+export const stringIsInteger = (integer: string, positiveNumbersOnly = true) => {
   const stringInteger = String(integer);
   if (!stringInteger.match(/^[-]?\d+$/)) {
     return false;
   }
   const bNparsed = new BigNumber(stringInteger);
   const limit = positiveNumbersOnly ? 0 : -1;
-  return (
-    bNparsed.toString(10) === stringInteger && bNparsed.comparedTo(0) >= limit
-  );
+  return bNparsed.toString(10) === stringInteger && bNparsed.comparedTo(0) >= limit;
 };
 
 export const stringIsFloat = (amount: string) => {

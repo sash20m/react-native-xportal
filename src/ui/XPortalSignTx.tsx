@@ -1,13 +1,7 @@
-import React, {useState} from 'react';
-import {
-  ActivityIndicator,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {xPortalSingleton as XPortal} from '../core/XPortal';
-import {XPortalSignTxProps} from '../types/xportalUi.types';
+import React, { useState } from 'react';
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { xPortalSingleton as XPortal } from '../core/XPortal';
+import { XPortalSignTxProps } from '../types/xportalUi.types';
 
 const XPortalSignTx = ({
   transactions,
@@ -36,9 +30,7 @@ const XPortalSignTx = ({
   };
 
   return (
-    <TouchableOpacity
-      style={[buttonStyle.container, style]}
-      onPress={xPortalSignTx}>
+    <TouchableOpacity style={[buttonStyle.container, style]} onPress={xPortalSignTx}>
       {content ? (
         content
       ) : (

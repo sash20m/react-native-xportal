@@ -8,20 +8,17 @@ import {
   TransactionPayload,
   TransactionVersion,
 } from '@multiversx/sdk-core';
-import {Signature} from '@multiversx/sdk-core/out/signature';
+import { Signature } from '@multiversx/sdk-core/out/signature';
 import Client from '@walletconnect/sign-client';
-import {getAppMetadata} from '@walletconnect/utils';
-import {EngineTypes, SessionTypes, SignClientTypes} from '@walletconnect/types';
+import { getAppMetadata } from '@walletconnect/utils';
+import { EngineTypes, SessionTypes, SignClientTypes } from '@walletconnect/types';
 import BigNumber from 'bignumber.js';
-import {NetworkConfig} from '@multiversx/sdk-network-providers';
+import { NetworkConfig } from '@multiversx/sdk-network-providers';
 
-import {
-  WALLETCONNECT_MULTIVERSX_METHODS,
-  WALLETCONNECT_MULTIVERSX_NAMESPACE,
-} from './constants';
-import {WalletConnectProviderErrorMessagesEnum} from './errors';
-import {Logger} from './logger';
-import {OptionalOperation} from './operation';
+import { WALLETCONNECT_MULTIVERSX_METHODS, WALLETCONNECT_MULTIVERSX_NAMESPACE } from './constants';
+import { WalletConnectProviderErrorMessagesEnum } from './errors';
+import { Logger } from './logger';
+import { OptionalOperation } from './operation';
 import {
   EXTRA_GAS_LIMIT_GUARDED_TX,
   GAS_LIMIT,
@@ -30,18 +27,14 @@ import {
   GAS_PRICE_MODIFIER,
   VERSION,
 } from '../../constants/gas';
-import {selectWalletAddress} from '../../redux/selectors/wallet.selector';
-import {getMxAccount} from '../http/multiversx';
-import {SimpleTransactionType} from '../../types';
-import {selectChainID} from '../../redux/selectors/connectionConfig.selector';
-import {Buffer} from 'buffer';
-import {
-  isStringBase64,
-  stringIsFloat,
-  stringIsInteger,
-} from '../../utils/stringsUtils';
-import {updateWallet} from '../../redux/slices/wallet.slice';
-import {store as reduxStore} from '../../redux/store';
+import { selectWalletAddress } from '../../redux/selectors/wallet.selector';
+import { getMxAccount } from '../http/multiversx';
+import { SimpleTransactionType } from '../../types';
+import { selectChainID } from '../../redux/selectors/connectionConfig.selector';
+import { Buffer } from 'buffer';
+import { isStringBase64, stringIsFloat, stringIsInteger } from '../../utils/stringsUtils';
+import { updateWallet } from '../../redux/slices/wallet.slice';
+import { store as reduxStore } from '../../redux/store';
 
 export interface ConnectParamsTypes {
   topic?: string;
@@ -68,17 +61,14 @@ export interface CalculateFeeLimitType {
   defaultGasPrice?: string;
 }
 
-export function getCurrentSession(
-  chainId: string,
-  client?: Client,
-): SessionTypes.Struct {
+export function getCurrentSession(chainId: string, client?: Client): SessionTypes.Struct {
   if (!client) {
     throw new Error(WalletConnectProviderErrorMessagesEnum.notInitialized);
   }
 
   const acknowledgedSessions = client
     .find(getConnectionParams(chainId))
-    .filter(s => s.acknowledged);
+    .filter((s) => s.acknowledged);
 
   if (acknowledgedSessions.length > 0) {
     const lastKeyIndex = acknowledgedSessions.length - 1;
@@ -98,10 +88,7 @@ export function getCurrentSession(
   throw new Error(WalletConnectProviderErrorMessagesEnum.sessionNotConnected);
 }
 
-export function getCurrentTopic(
-  chainId: string,
-  client?: Client,
-): SessionTypes.Struct['topic'] {
+export function getCurrentTopic(chainId: string, client?: Client): SessionTypes.Struct['topic'] {
   if (!client) {
     throw new Error(WalletConnectProviderErrorMessagesEnum.notInitialized);
   }
@@ -116,12 +103,9 @@ export function getCurrentTopic(
 
 export function getConnectionParams(
   chainId: string,
-  options?: ConnectParamsTypes,
+  options?: ConnectParamsTypes
 ): EngineTypes.FindParams {
-  const methods = [
-    ...WALLETCONNECT_MULTIVERSX_METHODS,
-    ...(options?.methods ?? []),
-  ];
+  const methods = [...WALLETCONNECT_MULTIVERSX_METHODS, ...(options?.methods ?? [])];
   if (!options?.methods?.includes(OptionalOperation.SIGN_LOGIN_TOKEN)) {
     methods.push(OptionalOperation.SIGN_LOGIN_TOKEN);
   }
@@ -149,8 +133,7 @@ export function addressIsValid(destinationAddress: string): boolean {
 }
 
 export function getAddressFromSession(session: SessionTypes.Struct): string {
-  const selectedNamespace =
-    session.namespaces[WALLETCONNECT_MULTIVERSX_NAMESPACE];
+  const selectedNamespace = session.namespaces[WALLETCONNECT_MULTIVERSX_NAMESPACE];
 
   if (selectedNamespace && selectedNamespace.accounts) {
     // Use only the first address in case of multiple provided addresses
@@ -171,15 +154,11 @@ export function applyTransactionSignature({
   response: TransactionResponse;
 }): Transaction {
   if (!response) {
-    Logger.error(
-      WalletConnectProviderErrorMessagesEnum.invalidTransactionResponse,
-    );
-    throw new Error(
-      WalletConnectProviderErrorMessagesEnum.invalidTransactionResponse,
-    );
+    Logger.error(WalletConnectProviderErrorMessagesEnum.invalidTransactionResponse);
+    throw new Error(WalletConnectProviderErrorMessagesEnum.invalidTransactionResponse);
   }
 
-  const {signature, guardianSignature, version, options, guardian} = response;
+  const { signature, guardianSignature, version, options, guardian } = response;
   const transactionGuardian = transaction.getGuardian().bech32();
 
   if (transactionGuardian && transactionGuardian !== guardian) {
@@ -210,35 +189,23 @@ export function applyTransactionSignature({
 
 export function getMetadata(metadata?: SignClientTypes.Options['metadata']) {
   if (metadata) {
-    return {...metadata, url: getAppMetadata().url};
+    return { ...metadata, url: getAppMetadata().url };
   }
 
   return;
 }
 
-export function calculateGasLimit({
-  data,
-  isGuarded,
-}: {
-  data?: string;
-  isGuarded?: boolean;
-}) {
+export function calculateGasLimit({ data, isGuarded }: { data?: string; isGuarded?: boolean }) {
   const guardedAccountGasLimit = isGuarded ? EXTRA_GAS_LIMIT_GUARDED_TX : 0;
-  const bNconfigGasLimit = new BigNumber(GAS_LIMIT).plus(
-    guardedAccountGasLimit,
-  );
+  const bNconfigGasLimit = new BigNumber(GAS_LIMIT).plus(guardedAccountGasLimit);
   const bNgasPerDataByte = new BigNumber(GAS_PER_DATA_BYTE);
-  const bNgasValue = data
-    ? bNgasPerDataByte.times(Buffer.from(data).length)
-    : 0;
+  const bNgasValue = data ? bNgasPerDataByte.times(Buffer.from(data).length) : 0;
   const bNgasLimit = bNconfigGasLimit.plus(bNgasValue);
   const gasLimit = bNgasLimit.toString(10);
   return gasLimit;
 }
 
-export async function createSignableTransactions(
-  transactions: SimpleTransactionType[],
-) {
+export async function createSignableTransactions(transactions: SimpleTransactionType[]) {
   const address = selectWalletAddress();
   const account = await getMxAccount(address);
   const accountNonce = account?.nonce || 0;
@@ -275,7 +242,7 @@ export async function createSignableTransactions(
 
     if (txChainId && txChainId !== storeChainId) {
       throw Error(
-        `The ChainId for the transaction with nonce=${nonce}, is not the same as walletconnect's chainId`,
+        `The ChainId for the transaction with nonce=${nonce}, is not the same as walletconnect's chainId`
       );
     }
 
@@ -299,7 +266,7 @@ export async function createSignableTransactions(
     });
   });
 
-  await reduxStore.dispatch(updateWallet({nonce: highestNonce}));
+  await reduxStore.dispatch(updateWallet({ nonce: highestNonce }));
 
   return signableTransactions;
 }
@@ -315,18 +282,12 @@ function newTransaction(rawTransaction: IPlainTransactionObject) {
     gasPrice: rawTransaction.gasPrice.valueOf() ?? GAS_PRICE,
     chainID: rawTransaction.chainID.valueOf(),
     version: new TransactionVersion(rawTransaction.version ?? VERSION),
-    ...(rawTransaction.options
-      ? {options: new TransactionOptions(rawTransaction.options)}
-      : {}),
-    ...(rawTransaction.guardian
-      ? {guardian: new Address(rawTransaction.guardian)}
-      : {}),
+    ...(rawTransaction.options ? { options: new TransactionOptions(rawTransaction.options) } : {}),
+    ...(rawTransaction.guardian ? { guardian: new Address(rawTransaction.guardian) } : {}),
   });
 
   if (rawTransaction?.guardianSignature) {
-    transaction.applyGuardianSignature(
-      Buffer.from(rawTransaction.guardianSignature, 'hex'),
-    );
+    transaction.applyGuardianSignature(Buffer.from(rawTransaction.guardianSignature, 'hex'));
   }
 
   if (rawTransaction?.signature) {
@@ -336,9 +297,7 @@ function newTransaction(rawTransaction: IPlainTransactionObject) {
   return transaction;
 }
 
-export const getDataPayloadForTransaction = (
-  data?: string,
-): TransactionPayload => {
+export const getDataPayloadForTransaction = (data?: string): TransactionPayload => {
   const defaultData = data ?? '';
 
   return isStringBase64(defaultData)
@@ -349,7 +308,7 @@ export const getDataPayloadForTransaction = (
 export function calcTotalFee(transactions: Transaction[], minGasLimit: number) {
   let totalFee = new BigNumber(0);
 
-  transactions.forEach(tx => {
+  transactions.forEach((tx) => {
     const fee = calculateFeeLimit({
       gasPerDataByte: String(GAS_PER_DATA_BYTE),
       gasPriceModifier: String(GAS_PRICE_MODIFIER),

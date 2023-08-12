@@ -10,9 +10,7 @@ export function getXPortalSchemaUrl(): string {
  * when the user wants to connect XPortal. With the returned url
  * the user can be redirected to XPortal to accept the incoming connection.
  */
-export function getEncodedXPortalLoginSchemaUrl(
-  wcUri: string | undefined,
-): string {
+export function getEncodedXPortalLoginSchemaUrl(wcUri: string | undefined): string {
   if (!wcUri) {
     return '';
   }

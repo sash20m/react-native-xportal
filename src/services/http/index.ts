@@ -1,4 +1,4 @@
-import {getMxAccount, getAccountTokens} from './multiversx';
+import { getMxAccount, getAccountTokens } from './multiversx';
 
 const http = {
   getAccountTokens,

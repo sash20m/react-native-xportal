@@ -1,11 +1,11 @@
-import {createContext} from 'react';
+import { createContext } from 'react';
 import {
   createDispatchHook,
   createSelectorHook,
   createStoreHook,
   ReactReduxContextValue,
 } from 'react-redux';
-import {store, subscription} from './store';
+import { store, subscription } from './store';
 
 const defaultContextValue: ReactReduxContextValue = {
   store,

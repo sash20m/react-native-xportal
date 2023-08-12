@@ -1,6 +1,6 @@
-import {StyleProp, ViewStyle} from 'react-native';
-import {SignMessageParams, SignTransactionsParams} from './xPortal.types';
-import {SignableMessage, Transaction} from '@multiversx/sdk-core/out';
+import { StyleProp, ViewStyle } from 'react-native';
+import { SignMessageParams, SignTransactionsParams } from './xPortal.types';
+import { SignableMessage, Transaction } from '@multiversx/sdk-core/out';
 
 export interface XPortalLoginProps {
   /**
