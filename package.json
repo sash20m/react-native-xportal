@@ -86,7 +86,6 @@
     "@babel/core": "^7.20.0"
   },
   "peerDependencies": {
-    "@multiversx/sdk-core": ">= 12.1.0",
     "react-native": ">=0.60",
     "react": "^17.0.0"
   },
