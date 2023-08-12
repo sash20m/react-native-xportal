@@ -7,21 +7,27 @@ import {
   View,
 } from 'react-native';
 import {xPortalSingleton as XPortal} from '../core/XPortal';
-import withReduxProvider from '../hocs/withReduxProvider';
-import {XPortalLoginProps} from '../types/xportalUi.types';
-import {useSelector} from 'react-redux';
-import {ReduxStateSlices} from '../redux/index.reducer';
+import {XPortalSignTxProps} from '../types/xportalUi.types';
 
-const XPortalLogin = ({content, style}: XPortalLoginProps) => {
-  const isConnected = useSelector(
-    (state: ReduxStateSlices) => state.connectionConfigSlice.connected,
-  );
+const XPortalSignTx = ({
+  transactions,
+  minGasLimit,
+  style,
+  content,
+  callback,
+}: XPortalSignTxProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const xPortalLogin = async () => {
+  const xPortalSignTx = async () => {
     try {
       setIsLoading(true);
-      await XPortal.login();
+
+      const response = await XPortal.signTransactions({
+        transactions,
+        minGasLimit,
+      });
+      callback(response);
+
       setIsLoading(false);
     } catch (error: any) {
       setIsLoading(false);
@@ -32,7 +38,7 @@ const XPortalLogin = ({content, style}: XPortalLoginProps) => {
   return (
     <TouchableOpacity
       style={[buttonStyle.container, style]}
-      onPress={xPortalLogin}>
+      onPress={xPortalSignTx}>
       {content ? (
         content
       ) : (
@@ -40,9 +46,7 @@ const XPortalLogin = ({content, style}: XPortalLoginProps) => {
           {isLoading ? (
             <ActivityIndicator />
           ) : (
-            <Text style={buttonStyle.text}>
-              {isConnected ? 'XPortal Connected' : 'Connect XPortal'}
-            </Text>
+            <Text style={buttonStyle.text}>Sign Transaction</Text>
           )}
         </View>
       )}
@@ -50,7 +54,7 @@ const XPortalLogin = ({content, style}: XPortalLoginProps) => {
   );
 };
 
-export default withReduxProvider<XPortalLoginProps>(XPortalLogin);
+export default XPortalSignTx;
 
 const buttonStyle = StyleSheet.create({
   container: {

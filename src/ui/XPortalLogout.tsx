@@ -8,20 +8,20 @@ import {
 } from 'react-native';
 import {xPortalSingleton as XPortal} from '../core/XPortal';
 import withReduxProvider from '../hocs/withReduxProvider';
-import {XPortalLoginProps} from '../types/xportalUi.types';
+import {XPortalLogoutProps} from '../types/xportalUi.types';
 import {useSelector} from 'react-redux';
 import {ReduxStateSlices} from '../redux/index.reducer';
 
-const XPortalLogin = ({content, style}: XPortalLoginProps) => {
+const XPortalLogout = ({content, style}: XPortalLogoutProps) => {
   const isConnected = useSelector(
     (state: ReduxStateSlices) => state.connectionConfigSlice.connected,
   );
   const [isLoading, setIsLoading] = useState(false);
 
-  const xPortalLogin = async () => {
+  const xPortalLogout = async () => {
     try {
       setIsLoading(true);
-      await XPortal.login();
+      await XPortal.logout();
       setIsLoading(false);
     } catch (error: any) {
       setIsLoading(false);
@@ -32,7 +32,7 @@ const XPortalLogin = ({content, style}: XPortalLoginProps) => {
   return (
     <TouchableOpacity
       style={[buttonStyle.container, style]}
-      onPress={xPortalLogin}>
+      onPress={xPortalLogout}>
       {content ? (
         content
       ) : (
@@ -41,7 +41,7 @@ const XPortalLogin = ({content, style}: XPortalLoginProps) => {
             <ActivityIndicator />
           ) : (
             <Text style={buttonStyle.text}>
-              {isConnected ? 'XPortal Connected' : 'Connect XPortal'}
+              {isConnected ? 'Disconnect' : 'Disconnected'}
             </Text>
           )}
         </View>
@@ -50,7 +50,7 @@ const XPortalLogin = ({content, style}: XPortalLoginProps) => {
   );
 };
 
-export default withReduxProvider<XPortalLoginProps>(XPortalLogin);
+export default withReduxProvider<XPortalLogoutProps>(XPortalLogout);
 
 const buttonStyle = StyleSheet.create({
   container: {

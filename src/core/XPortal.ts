@@ -1,6 +1,6 @@
 import {
-  setConnectionConfig,
   updateAccountLoading,
+  updateConnectionConfig,
 } from '../redux/slices/connectionConfig.slice';
 import {updateWallet} from '../redux/slices/wallet.slice';
 import {store as reduxStore} from '../redux/store';
@@ -118,7 +118,7 @@ class XPortal {
     }
 
     try {
-      await reduxStore.dispatch(setConnectionConfig({chainId, projectId}));
+      await reduxStore.dispatch(updateConnectionConfig({chainId, projectId}));
 
       const options = metadata ? {metadata} : {};
       const connectionProvider = new WalletConnectProvider(
@@ -141,7 +141,10 @@ class XPortal {
 
   async login(): Promise<Boolean> {
     const walletConnectProvider = getWalletConnectProvider();
-    if (!walletConnectProvider?.walletConnector) {
+    if (
+      !walletConnectProvider?.walletConnector &&
+      !walletConnectProvider.wasConnected
+    ) {
       throw new Error(ERROR_MESSAGES.XPORTAL_NOT_INITIALIZED);
     }
 

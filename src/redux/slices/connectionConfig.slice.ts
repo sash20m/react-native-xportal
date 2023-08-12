@@ -10,7 +10,9 @@ export interface ConnectionConfigSlice {
   projectId?: string;
 }
 
-const initialState: ConnectionConfigSlice = {};
+const initialState: ConnectionConfigSlice = {
+  connected: false,
+};
 
 export const connectionConfigSlice = createSlice({
   name: 'connectionConfigSlice',

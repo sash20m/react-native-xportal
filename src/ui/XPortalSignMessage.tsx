@@ -7,21 +7,23 @@ import {
   View,
 } from 'react-native';
 import {xPortalSingleton as XPortal} from '../core/XPortal';
-import withReduxProvider from '../hocs/withReduxProvider';
-import {XPortalLoginProps} from '../types/xportalUi.types';
-import {useSelector} from 'react-redux';
-import {ReduxStateSlices} from '../redux/index.reducer';
+import {XPortalSignMessageProps} from '../types/xportalUi.types';
 
-const XPortalLogin = ({content, style}: XPortalLoginProps) => {
-  const isConnected = useSelector(
-    (state: ReduxStateSlices) => state.connectionConfigSlice.connected,
-  );
+const XPortalSignMessage = ({
+  message,
+  style,
+  content,
+  callback,
+}: XPortalSignMessageProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const xPortalLogin = async () => {
+  const xPortalLogout = async () => {
     try {
       setIsLoading(true);
-      await XPortal.login();
+
+      const response = await XPortal.signMessage({message});
+      callback(response);
+
       setIsLoading(false);
     } catch (error: any) {
       setIsLoading(false);
@@ -32,7 +34,7 @@ const XPortalLogin = ({content, style}: XPortalLoginProps) => {
   return (
     <TouchableOpacity
       style={[buttonStyle.container, style]}
-      onPress={xPortalLogin}>
+      onPress={xPortalLogout}>
       {content ? (
         content
       ) : (
@@ -40,9 +42,7 @@ const XPortalLogin = ({content, style}: XPortalLoginProps) => {
           {isLoading ? (
             <ActivityIndicator />
           ) : (
-            <Text style={buttonStyle.text}>
-              {isConnected ? 'XPortal Connected' : 'Connect XPortal'}
-            </Text>
+            <Text style={buttonStyle.text}>Sign Message</Text>
           )}
         </View>
       )}
@@ -50,7 +50,7 @@ const XPortalLogin = ({content, style}: XPortalLoginProps) => {
   );
 };
 
-export default withReduxProvider<XPortalLoginProps>(XPortalLogin);
+export default XPortalSignMessage;
 
 const buttonStyle = StyleSheet.create({
   container: {

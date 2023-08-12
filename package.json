@@ -36,8 +36,6 @@
     "process": "^0.11.0",
     "punycode": "^1.2.4",
     "querystring-es3": "~0.2.0",
-    "react": "18.2.0",
-    "react-native": "0.71.8",
     "react-native-crypto": "^2.1.0",
     "react-native-get-random-values": "^1.8.0",
     "react-native-level-fs": "^3.0.0",
@@ -89,7 +87,8 @@
   },
   "peerDependencies": {
     "@multiversx/sdk-core": ">= 12.1.0",
-    "react-native": ">=0.60"
+    "react-native": ">=0.60",
+    "react": "^17.0.0"
   },
   "description": "A library that connects the mobile app to the MultiversX's xPortal mobile wallet.",
   "keywords": [
