@@ -29,7 +29,7 @@
     "crypto-js": "^4.1.1",
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.1",
-    "eslint": "^8.0.1",
+    "eslint": "^8.47.0",
     "eslint-config-prettier": "^9.0.0",
     "events": "^1.0.0",
     "global": "^4.4.0",
@@ -96,7 +96,7 @@
   },
   "peerDependencies": {
     "react": "^17.0.0",
-    "react-native": ">=0.60"
+    "react-native": ">=0.70.0"
   },
   "description": "A library that connects the mobile app to the MultiversX's xPortal mobile wallet.",
   "keywords": [
