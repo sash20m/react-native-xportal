@@ -8,5 +8,5 @@ if (typeof Buffer === 'undefined') {
   global.Buffer = require('buffer').Buffer;
 }
 
-export { xPortalSingleton as XPortal } from './src/core/XPortal';
-export * from './src/ui';
+export { xPortalSingleton as XPortal } from './core/XPortal';
+export * from './ui';
