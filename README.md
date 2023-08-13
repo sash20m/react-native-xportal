@@ -247,10 +247,11 @@ import {
 All buttons can be styled and the content inside can be changed with the `content` prop.
 
 ### Props
-## Props
+| Prop Name    | Type                  | Available for    | Description                   |
+|--------------|-----------------------|------------------|-------------------------------|
+| content      | `React.ReactElement`  | All components   | Replaces the content of the button.   |
+| style        | `StyleProp<ViewStyle>`  | All components   | Styles for the button   |
+| callback       | `(res) => void`     |   `XPortalSignTx`, `XPortalSignMessage`   | Callback function to get back the result |
+| transaction       | `(Transaction | SimpleTransactionType)[]`  |   `XPortalSignTx`   | Transaction to be signed |
+|   message     | `string`     |  `XPortalSignMessage`   | The message to be signed |
 
-| Prop Name  | Type     | Default | Description                   |
-|------------|----------|---------|-------------------------------|
-| content      | `type1`  | `default1` | Description of the prop1.   |
-| prop2      | `type2`  | `default2` | Description of the prop2.   |
-| ...        | ...      | ...     | ...                           |
