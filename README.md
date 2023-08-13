@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/react-native-xportal"><img src="https://badge.fury.io/js/react-native-xportal" alt="NPM Version"></a>
+  <a href="https://www.npmjs.com/package/react-native-xportal"><img src="https://badge.fury.io/js/react-native-xportal.png" alt="NPM Version"></a>
 </p>
 
 > Connecting mobile apps to the MultiversX's xPortal mobile wallet.
