@@ -36,7 +36,11 @@ export interface WatchTransactionParams {
      */
     withUpdateAccountData?: boolean;
 }
-export interface RefreshAccountResponse extends MxAccount {
+export interface AccountResponse extends MxAccount {
     tokens: Tokens[];
+}
+export interface TokenList {
+    balance: string | undefined;
+    tokens: Tokens[] | undefined;
 }
 //# sourceMappingURL=xPortal.types.d.ts.map
