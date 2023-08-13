@@ -12,6 +12,7 @@
 ## Table of Contents
 
 - [Installation](#installation)
+- [Prerequisites](#Prerequisites)
 - [Description](#description)
 - [Usage](#usage)
   - [Core Functions](#core)
@@ -38,6 +39,14 @@ npm install react-native-xportal
 or 
 ```bash
 yarn add react-native-xportal
+```
+
+## Prerequisites
+The library needs `@react-native-async-storage/async-storage` and `react-native-get-random-values` to work properly. Make sure you install them:
+```bash
+npm install @react-native-async-storage/async-storage react-native-get-random-values
+or;
+yarn add @react-native-async-storage/async-storage react-native-get-random-values
 ```
 
 ## Description
