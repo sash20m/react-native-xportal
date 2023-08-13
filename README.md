@@ -1,11 +1,11 @@
-# [React Native XPortal]
+# ![XPortal Logo](https://ibb.co/NrtnXDT)
 
 [![npm version](https://badge.fury.io/js/[library-name].svg)](https://badge.fury.io/js/[library-name])
 [![License](https://img.shields.io/badge/License-[License Name]-blue.svg)](https://opensource.org/licenses/[License Name])
 
 A library that connects a mobile app to the MultiversX's xPortal mobile wallet.
 
-![Demo or Library Screenshot](path-to-screenshot.png)
+
 
 ## Table of Contents
 
