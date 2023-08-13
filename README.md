@@ -245,13 +245,37 @@ import {
 />
 ```
 All buttons can be styled and the content inside can be changed with the `content` prop.
-
-### Props
+#### Props for components
 | Prop Name    | Type                  | Available for    | Description                   |
 |--------------|-----------------------|------------------|-------------------------------|
 | content      | `React.ReactElement`  | All components   | Replaces the content of the button.   |
-| style        | `StyleProp<ViewStyle>`  | All components   | Styles for the button   |
-| callback       | `(res) => void`     |   `XPortalSignTx`, `XPortalSignMessage`   | Callback function to get back the result |
-| transaction       | `(Transaction | SimpleTransactionType)[]`  |   `XPortalSignTx`   | Transaction to be signed |
-|   message     | `string`     |  `XPortalSignMessage`   | The message to be signed |
+| style        | `StyleProp<ViewStyle>`| All components   | Styles for the button   |
+| callback     | `(res) => void`       |   `XPortalSignTx`, `XPortalSignMessage`   | Callback function to get back the result |
+| transaction  | `SimpleTransactionType[]`  |   `XPortalSignTx`   | Transaction to be signed |
+| message      | `string`              |  `XPortalSignMessage`   | The message to be signed |
+
+## Roadmap
+Here are some features that need to be implemented: 
+ - Tests
+ - Stage-linter
+ - Signed Transaction log (if it is needed)
+ - Transaction broadcast (if it is needed)
+ - 
+For more, see the [open issues](https://github.com/multiversx/mx-sdk-dapp/issues) for a list of proposed features known issues. Check out **Contributing** below to get started.
+
+## Contributing
+
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+One can contribute by creating _pull requests_, or by opening _issues_ for discovered bugs or desired features.
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
 
