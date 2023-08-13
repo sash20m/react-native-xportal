@@ -35,35 +35,33 @@ The library has 2 main modules: `core` and `UI`. The `core` modules gives you th
 ## Usage
 The library needs to be initalized first in order to work, see example below.
 ```typescript
-      const callbacks = {
-        onClientLogin: async () => {
-          console.log('on login');
-        },
-        onClientLogout: async () => {
-          console.log('on logout');
-        },
-        onClientEvent: async (event: any) => {
-          console.log('event -> ', event);
-        },
-      };
+const callbacks = {
+      onClientLogin: async () => {
+            console.log('on login');
+      },
+      onClientLogout: async () => {
+            console.log('on logout');
+      },
+onClientEvent: async (event: any) => {
+            console.log('event -> ', event);
+      },
+};
 
-      try {
-        await XPortal.initialize({
-          chainId: 'd',
-          projectId: '<wallet connect project ID>',
-          metadata: {
-            description: 'Connect with x',
-            url: '<your website>',
-            icons: [
-              '<https://img.com/linkToIcon.png>',
-            ],
-            name: '<name>',
-          },
-          callbacks,
-        });
-      } catch (error) {
-        console.log(error);
-      }
+try {
+      await XPortal.initialize({
+            chainId: 'd',
+            projectId: '<wallet connect project ID>',
+            metadata: {
+                  description: 'Connect with x',
+                  url: '<your website>',
+                  icons: ['<https://img.com/linkToIcon.png>'],
+                  name: '<name>',
+            },
+            callbacks,
+      });
+} catch (error) {
+      console.log(error);
+}
 ```
 You need to  have a WalletConnect project ID. To get one see: https://cloud.walletconnect.com/app. Also, make sure to have valid data in your metadata field, otherwise the XPortal app will show a "Unexpected Error" when redirecting to it for login.
 
@@ -72,9 +70,9 @@ You need to  have a WalletConnect project ID. To get one see: https://cloud.wall
 ```typescript
 try {
       await XPortal.login();
-    } catch (error: any) {
+} catch (error: any) {
       throw new Error(error.message);
-    }
+}
 ```
 This will connect your app to user's XPortal app and his account.
 
@@ -82,18 +80,16 @@ This will connect your app to user's XPortal app and his account.
 ```typescript
 try {
       await XPortal.logout();
-    } catch (error: any) {
+} catch (error: any) {
       throw new Error(error.message);
-    }
+}
 ```
 Disconnects your app from XPortal, cleaning local connection and XPortal's.
 
 ### Sign Transactions
 ```typescript
 try {
-const data = {
-      transactions: [
-        {
+      const data = {transactions: [{
           value: '1000000000000',
           receiver:
             'erd1ju59m5rcrulg0h87ysed5acrz08xa4pkzts0hrzy2lau3ak3ne0sauhxgx',
@@ -104,19 +100,20 @@ const data = {
           data: 'Zm9vZCBmb3IgY2F0cw==',
           chainId: 'D',
           version: 1,
-        },
-      ],
+        }],
       // minGasLimit: 50_000 (optional)
-    };
+      };
 
-    const transactions = await XPortal.signTransactions(data);
-    const signature = transactions[0].getSignature().toString('hex');
+      const transactions = await XPortal.signTransactions(data);
+      const signature = transactions[0].getSignature().toString('hex');
 } catch (error: any) {
       throw new Error(error.message);
-    }
+}
 ```
 Transactions need to be in an array, thus being able to tolerate one or many transaction for signing.
-**Make sure all the transactions have a `chainId` or none of them have (and the one set on initialization will be used).***
+
+**Make sure all the transactions have a `chainId` or none of them have (and the one set on initialization will be used).**
+
 Transactions will be sent to XPortal where the user can sign them an then returned back to you for any use you choose. This function DOES NOT send the transaction over the MultiversX's blockchain - a better approach would be to send the signed transaction to your back-end and let it handle the broadcast and other changes that the trasanction imposes on your system. If broadcasting the transaction functionality is needed, it will be added eventually. Please see [Contributing](#contributing) if you want to add this functionality. 
 
 // see nonces
@@ -132,10 +129,7 @@ Like signing transactions, signes a message and returns it back.
 ```typescript
 try {
       const response = await XPortal.sendCustomRequest({
-        request: {
-          method: WalletConnectOptionalMethodsEnum.CANCEL_ACTION,
-          params: { action: 'string here' }
-        }
+            request: { method: WalletConnectOptionalMethodsEnum.CANCEL_ACTION, params: { action: 'string here' }}
       });
 } (error: any) {
       throw new Error(error.message);
@@ -166,10 +160,9 @@ Provides the ability to manually refresh the account data stored if there have b
 ### Watch Transaction
 ```typescript
 try {
-const state = await XPortal.watchTransaction({
-      transactionHash:
-        '8d78c007750e3c137943e4de7a7df5702bb11ae6541a4864670b5cf4420cf8e5',
-    });
+      const state = await XPortal.watchTransaction({
+            transactionHash: '8d78c007750e3c137943e4de7a7df5702bb11ae6541a4864670b5cf4420cf8e5',
+      });
 } (error: any) {
       throw new Error(error.message);
 }
@@ -185,3 +178,5 @@ const tokens = XPortal.getAccountTokensList();
 const balance = XPortal.getAccountBalance();
 ```
 Provides different information about the state of the account.
+
+
