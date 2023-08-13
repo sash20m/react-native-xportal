@@ -35,6 +35,8 @@ The library has 2 main modules: `core` and `UI`. The `core` modules gives you th
 ## Usage
 The library needs to be initalized first in order to work, see example below.
 ```typescript
+import { XPortal } from 'react-native-xportal';
+
 const callbacks = {
       onClientLogin: async () => {
             console.log('on login');
@@ -68,6 +70,8 @@ You need to  have a WalletConnect project ID. To get one see: https://cloud.wall
 ### Core functions
 #### Login
 ```typescript
+import { XPortal } from 'react-native-xportal';
+
 try {
       await XPortal.login();
 } catch (error: any) {
@@ -76,8 +80,11 @@ try {
 ```
 This will connect your app to user's XPortal app and his account.
 
+
 ### Logout
 ```typescript
+import { XPortal } from 'react-native-xportal';
+
 try {
       await XPortal.logout();
 } catch (error: any) {
@@ -86,8 +93,11 @@ try {
 ```
 Disconnects your app from XPortal, cleaning local connection and XPortal's.
 
+
 ### Sign Transactions
 ```typescript
+import { XPortal } from 'react-native-xportal';
+
 try {
       const data = {transactions: [{
           value: '1000000000000',
@@ -118,8 +128,11 @@ Transactions will be sent to XPortal where the user can sign them an then return
 
 // see nonces
 
+
 ### Sign Message
 ```typescript
+import { XPortal } from 'react-native-xportal';
+
 const signedMessage = await XPortal.signMessage({message: 'Passion'});
 const signature = signedMessage.getSignature().toString('hex');
 ```
@@ -127,6 +140,8 @@ Like signing transactions, signes a message and returns it back.
 
 ### Send Custom Request
 ```typescript
+import { XPortal } from 'react-native-xportal';
+
 try {
       const response = await XPortal.sendCustomRequest({
             request: { method: WalletConnectOptionalMethodsEnum.CANCEL_ACTION, params: { action: 'string here' }}
@@ -137,8 +152,11 @@ try {
 ```
 Send a custom request to XPortal, method and params need to specified in relation to your needs.
 
+
 ### Ping
 ```typescript
+import { XPortal } from 'react-native-xportal';
+
 try {
       const isActive = await XPortal.ping();
 } (error: any) {
@@ -147,8 +165,11 @@ try {
 ```
 Returns a `Boolean` to reflect the state of the connection with the XPortal. 
 
+
 ### Refresh Account Data
 ```typescript
+import { XPortal } from 'react-native-xportal';
+
 try {
       const isActive = await XPortal.refreshAccountData();
 } (error: any) {
@@ -157,8 +178,11 @@ try {
 ```
 Provides the ability to manually refresh the account data stored if there have been changes outside of your app.
 
+
 ### Watch Transaction
 ```typescript
+import { XPortal } from 'react-native-xportal';
+
 try {
       const state = await XPortal.watchTransaction({
             transactionHash: '8d78c007750e3c137943e4de7a7df5702bb11ae6541a4864670b5cf4420cf8e5',
@@ -169,8 +193,11 @@ try {
 ```
 Provides the ability to watch a any transaction's status after it was sent to the MultiversX blockchain. 
 
+
 ### Check Account Info functions
 ```typescript
+import { XPortal } from 'react-native-xportal';
+
 const address = XPortal.getWalletAddress();
 const isConnected = XPortal.isConnected();
 const account = XPortal.getFullAccountInfo();
@@ -179,4 +206,44 @@ const balance = XPortal.getAccountBalance();
 ```
 Provides different information about the state of the account.
 
+## UI
+You can see below an example with all the UI components currently provided.
+```jsx
+import {
+  XPortalLogin,
+  XPortalLogout,
+  XPortalSignMessage,
+  XPortalSignTx,
+} from 'react-native-xportal';
+
+<XPortalLogin />
+
+<XPortalLogout style={{marginTop: 20}} />
+
+<XPortalSignTx
+      style={{marginTop: 20}}
+      transactions={[{
+            value: '1000000000000',
+            receiver:
+              'erd1ju59m5rcrulg0h87ysed5acrz08xa4pkzts0hrzy2lau3ak3ne0sauhxgx',
+            sender:
+              'erd1ju59m5rcrulg0h87ysed5acrz08xa4pkzts0hrzy2lau3ak3ne0sauhxgx',
+            gasPrice: 1000000000,
+            gasLimit: 70000,
+            data: 'Zm9vZCBmb3IgY2F0cw==',
+            chainId: 'D',
+            version: 1,
+          },
+        ]}
+      callback={(signedTx) => doStuff(signedTx)}
+/>
+
+<XPortalSignMessage
+      style={{marginTop: 20}}
+      message="Passion"
+      callback={(signedMessage) => doStuff(signedMessage)}
+      content={<View> <Text>This is a custom content inside the button</Text> </View>}
+/>
+```
+All buttons can be styled and the content inside can be changed with the `content` prop.
 
