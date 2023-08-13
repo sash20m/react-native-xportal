@@ -4,7 +4,7 @@
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
   "types": "lib/typescript/index.d.ts",
-  "react-native": "src/index.ts",
+  "react-native": "srccc/index.ts",
   "scripts": {
     "prepack": "bob build"
   },
@@ -47,10 +47,10 @@
     "react-native-level-fs": "^3.0.0",
     "react-native-os": "^1.0.1",
     "react-native-randombytes": "^3.0.0",
-    "react-redux": "8.0.1",
+    "react-redux": "^8.0.2",
     "readable-stream": "1.0.33",
     "redux": "^4.2.1",
-    "redux-persist": "6.0.0",
+    "redux-persist": "^6.0.0",
     "rn-nodeify": "^10.3.0",
     "stream-browserify": "^1.0.0",
     "string_decoder": "~0.10.25",
