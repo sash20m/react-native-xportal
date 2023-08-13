@@ -1,8 +1,8 @@
 # React Native XPortal
+
 <p align="center">
   <img src="./img/xportal.png" alt="Alternate text for image">
 </p>
-
 
 [![npm version](https://badge.fury.io/js/react-native-xportal.svg)](https://badge.fury.io/js/react-native-xportal)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
