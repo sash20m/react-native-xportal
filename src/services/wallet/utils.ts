@@ -208,8 +208,8 @@ export function calculateGasLimit({ data, isGuarded }: { data?: string; isGuarde
 export async function createSignableTransactions(transactions: SimpleTransactionType[]) {
   const address = selectWalletAddress();
   const account = await getMxAccount(address);
-  const accountNonce = account?.nonce || 0;
-  let highestNonce = accountNonce;
+  // const accountNonce = account?.nonce || 0;
+  // let highestNonce = accountNonce;
 
   const signableTransactions = transactions.map((tx, index) => {
     const {
@@ -226,7 +226,8 @@ export async function createSignableTransactions(transactions: SimpleTransaction
       }),
       guardian,
       guardianSignature,
-      nonce = accountNonce ? accountNonce + index : 0,
+      nonce,
+      // nonce = accountNonce ? accountNonce + index : 0,
     } = tx;
     let validatedReceiver = receiver;
 
@@ -246,9 +247,9 @@ export async function createSignableTransactions(transactions: SimpleTransaction
       );
     }
 
-    if (nonce > highestNonce) {
-      highestNonce = nonce;
-    }
+    // if (nonce > highestNonce) {
+    //   highestNonce = nonce;
+    // }
 
     return newTransaction({
       value,
@@ -266,7 +267,7 @@ export async function createSignableTransactions(transactions: SimpleTransaction
     });
   });
 
-  await reduxStore.dispatch(updateWallet({ nonce: highestNonce }));
+  // await reduxStore.dispatch(updateWallet({ nonce: highestNonce }));
 
   return signableTransactions;
 }

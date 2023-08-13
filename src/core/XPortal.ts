@@ -2,15 +2,16 @@ import {
   updateAccountLoading,
   updateConnectionConfig,
 } from '../redux/slices/connectionConfig.slice';
-import { updateWallet } from '../redux/slices/wallet.slice';
+import { Tokens, updateWallet } from '../redux/slices/wallet.slice';
 import { store as reduxStore } from '../redux/store';
 import {
   InitializeParams,
-  RefreshAccountResponse,
+  AccountResponse,
   SendCustomRequestParams,
   SignMessageParams,
   SignTransactionsParams,
   WatchTransactionParams,
+  TokenList,
 } from '../types/xPortal.types';
 import { IClientConnect, WalletConnectProvider } from '../services/wallet/walletConnectProvider';
 import { getWalletConnectProvider, setWalletConnectProvider } from './connectionProvider';
@@ -67,29 +68,25 @@ class XPortal {
     return !!state;
   }
 
-  getFullAccountInfo() {
+  getFullAccountInfo(): AccountResponse {
     const walletConnectProvider = getWalletConnectProvider();
     if (!walletConnectProvider?.walletConnector) {
       throw new Error(ERROR_MESSAGES.XPORTAL_NOT_INITIALIZED);
     }
-    const account = selectAccount();
+    const account = selectAccount() as AccountResponse;
     return account;
   }
 
-  getAccountTokensList() {
+  getAccountTokensList(): Tokens[] | undefined {
     const walletConnectProvider = getWalletConnectProvider();
     if (!walletConnectProvider?.walletConnector) {
       throw new Error(ERROR_MESSAGES.XPORTAL_NOT_INITIALIZED);
     }
     const tokens = selectAccountTokens();
-    const generalBalance = selectAccountBalance();
-    return {
-      balance: generalBalance,
-      tokens,
-    };
+    return tokens;
   }
 
-  getAccountBalance() {
+  getAccountBalance(): string | undefined {
     const walletConnectProvider = getWalletConnectProvider();
     if (!walletConnectProvider?.walletConnector) {
       throw new Error(ERROR_MESSAGES.XPORTAL_NOT_INITIALIZED);
@@ -324,7 +321,7 @@ class XPortal {
     }
   }
 
-  async refreshAccountData(): Promise<RefreshAccountResponse> {
+  async refreshAccountData(): Promise<AccountResponse> {
     const walletConnectProvider = getWalletConnectProvider();
     if (!walletConnectProvider?.walletConnector) {
       throw new Error(ERROR_MESSAGES.XPORTAL_NOT_INITIALIZED);
