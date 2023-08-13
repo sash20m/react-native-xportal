@@ -1,0 +1,1 @@
+{"version":3,"file":"index.reducer.d.ts","sourceRoot":"","sources":["../../../src/redux/index.reducer.ts"],"names":[],"mappings":";AAEA,OAAsB,EAAE,WAAW,EAAE,MAAM,uBAAuB,CAAC;AACnE,OAAgC,EAAE,qBAAqB,EAAE,MAAM,iCAAiC,CAAC;AAGjG,MAAM,WAAW,gBAAgB;IAC/B,WAAW,EAAE,WAAW,CAAC;IACzB,qBAAqB,EAAE,qBAAqB,CAAC;CAC9C;;;;;AAYD,wBAAuD"}

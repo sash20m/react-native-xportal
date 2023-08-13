@@ -1,0 +1,1 @@
+{"version":3,"names":["default","XPortalLogin","XPortalLogout","XPortalSignTx","XPortalSignMessage"],"sourceRoot":"../../../src","sources":["ui/index.tsx"],"mappings":"AAAA,SAASA,OAAO,IAAIC,YAAY,QAAQ,gBAAgB;AACxD,SAASD,OAAO,IAAIE,aAAa,QAAQ,iBAAiB;AAC1D,SAASF,OAAO,IAAIG,aAAa,QAAQ,iBAAiB;AAC1D,SAASH,OAAO,IAAII,kBAAkB,QAAQ,sBAAsB"}

@@ -1,0 +1,1 @@
+{"version":3,"names":["Logger","error","message","console","trace"],"sourceRoot":"../../../../src","sources":["services/wallet/logger.ts"],"mappings":"AAAA,OAAO,MAAMA,MAAM,CAAC;EAClB,OAAOC,KAAKA,CAACC,OAAe,EAAE;IAC5BC,OAAO,CAACF,KAAK,CAAC,uCAAuC,EAAEC,OAAO,CAAC;EACjE;EAEA,OAAOE,KAAKA,CAACF,OAAe,EAAE;IAC5BC,OAAO,CAACC,KAAK,CAACF,OAAO,CAAC;EACxB;AACF"}
