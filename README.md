@@ -4,8 +4,9 @@
   <img src="./img/xportal.png" alt="Alternate text for image">
 </p>
 
-[![npm version](https://badge.fury.io/js/react-native-xportal.svg)](https://badge.fury.io/js/react-native-xportal)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+<p align="center">
+  <a href="https://www.npmjs.com/package/react-native-xportal"><img src="https://badge.fury.io/js/react-native-xportal" alt="NPM Version"></a>
+</p>
 
 > Connecting mobile apps to the MultiversX's xPortal mobile wallet.
 
