@@ -32,7 +32,7 @@ The library has 2 main modules: [core] and [UI]. The [core] modules gives you th
 
 ## Usage
 The library needs to be initalized first in order to work, see example below.
-```ts
+```typescript
       const callbacks = {
         onClientLogin: async () => {
           console.log('on login');
@@ -63,4 +63,4 @@ The library needs to be initalized first in order to work, see example below.
         console.log(error);
       }
 ```
-You need to  have a WalletConnect project ID. To get one see: (https://cloud.walletconnect.com/app). Also, make sure to have valid data in your metadata field, otherwise the XPortal app will show a "Unexpected Error" when redirecting to it for login.
+You need to  have a WalletConnect project ID. To get one see: https://cloud.walletconnect.com/app. Also, make sure to have valid data in your metadata field, otherwise the XPortal app will show a "Unexpected Error" when redirecting to it for login.
