@@ -275,7 +275,7 @@ Here are some features that need to be implemented:
  - Stage-linter
  - Signed Transaction log (if it is needed)
  - Transaction broadcast (if it is needed)
- - 
+ - Husky for commit lint
 For more, see the [open issues](https://github.com/multiversx/mx-sdk-dapp/issues) for a list of proposed features known issues. Check out **Contributing** below to get started.
 
 ## Contributing
