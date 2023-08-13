@@ -1,9 +1,12 @@
 {
   "name": "react-native-xportal",
   "version": "1.0.0",
-  "main": "src/index.ts",
+  "main": "lib/commonjs/index.js",
+  "module": "lib/module/index.js",
+  "types": "lib/typescript/index.d.ts",
+  "react-native": "src/index.ts",
   "scripts": {
-    "build": "tsc"
+    "prepack": "bob build"
   },
   "dependencies": {
     "@multiversx/sdk-core": "^12.6.0",
@@ -59,32 +62,6 @@
     "util": "~0.10.3",
     "vm-browserify": "0.0.4"
   },
-  "react-native": {
-    "zlib": "browserify-zlib",
-    "console": "console-browserify",
-    "constants": "constants-browserify",
-    "crypto": "react-native-crypto",
-    "dns": "dns.js",
-    "net": "react-native-tcp",
-    "domain": "domain-browser",
-    "http": "@tradle/react-native-http",
-    "https": "https-browserify",
-    "os": "react-native-os",
-    "path": "path-browserify",
-    "querystring": "querystring-es3",
-    "fs": "react-native-level-fs",
-    "_stream_transform": "readable-stream/transform",
-    "_stream_readable": "readable-stream/readable",
-    "_stream_writable": "readable-stream/writable",
-    "_stream_duplex": "readable-stream/duplex",
-    "_stream_passthrough": "readable-stream/passthrough",
-    "dgram": "react-native-udp",
-    "stream": "stream-browserify",
-    "timers": "timers-browserify",
-    "tty": "tty-browserify",
-    "vm": "vm-browserify",
-    "tls": false
-  },
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@typescript-eslint/eslint-plugin": "^5.52.0",
@@ -92,20 +69,44 @@
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
     "eslint-plugin-promise": "^6.0.0",
-    "eslint-plugin-react": "^7.33.1"
+    "eslint-plugin-react": "^7.33.1",
+    "react-native-builder-bob": "^0.21.3"
   },
   "peerDependencies": {
     "react": "^17.0.0",
     "react-native": ">=0.70.0"
   },
-  "description": "A library that connects the mobile app to the MultiversX's xPortal mobile wallet.",
+  "description": "A library that connects a mobile app to the MultiversX's xPortal mobile wallet.",
   "keywords": [
+    "react-native",
     "react",
     "native",
     "xportal",
     "multiversx",
-    "wallet"
+    "wallet",
+    "crypto",
+    "egld"
   ],
   "author": "sash20m",
-  "license": "MIT"
+  "license": "MIT",
+  "files": [
+    "src",
+    "lib",
+    "!**/__tests__",
+    "!**/__fixtures__",
+    "!**/__mocks__"
+  ],
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      "typescript"
+    ]
+  },
+  "eslintIgnore": [
+    "node_modules/",
+    "lib/"
+  ]
 }
