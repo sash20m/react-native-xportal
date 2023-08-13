@@ -1,4 +1,4 @@
-# ![XPortal Logo](https://ibb.co/NrtnXDT)
+# ![XPortal Logo](img/xportal.png)
 
 [![npm version](https://badge.fury.io/js/[library-name].svg)](https://badge.fury.io/js/[library-name])
 [![License](https://img.shields.io/badge/License-[License Name]-blue.svg)](https://opensource.org/licenses/[License Name])
