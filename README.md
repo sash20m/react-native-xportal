@@ -50,9 +50,9 @@ yarn add @react-native-async-storage/async-storage react-native-get-random-value
 ```
 
 ## Description
-The library works as a react-native substitute for [mx-sdk-dapp](https://github.com/multiversx/mx-sdk-dapp/tree/main), it helps a mobile app connect and interact with the XPortal wallet, including providing the necessary account information (balance, tokens, address etc) and signing transactions, messages or custom requests, thus abstracing all the processes of interacting with users' wallets. On connect, sign transaction or other actions, XPortal app will automatically be opened through deeplinking to complete the intended action. 
+The library works as a react-native substitute for [mx-sdk-dapp](https://github.com/multiversx/mx-sdk-dapp/tree/main), it helps mobile apps connect and interact with the XPortal wallet, including providing the necessary account information (balance, tokens, address etc) and signing transactions, messages or custom requests, thus abstracing all the processes of interacting with users' wallets. On connect, sign transaction or other actions, XPortal app will automatically be opened through deeplinking to complete the intended action. 
 
-The library has 2 main modules: `core` and `UI`. The `core` modules gives you the functions to connect, sign transactions and other so that you can call them anywhere you need. The `UI` modules exports buttons for easy of use, they also use the `core` module under the hood.
+The library has 2 main modules: `core` and `UI`. The `core` modules gives you the functions to connect, sign transactions and other so that you can call them anywhere you need. The `UI` modules exports buttons for ease of use, they also use the `core` module under the hood.
 
 ***Note: This library has all the basic functionalities for interacting with the XPortal Wallet. New functionalities can be added - if you want to contribute, please see the [Contributing](#contributing) section.***
 
@@ -78,7 +78,7 @@ try {
             chainId: 'd',
             projectId: '<wallet connect project ID>',
             metadata: {
-                  description: 'Connect with x',
+                  description: 'Connect with X',
                   url: '<your website>',
                   icons: ['<https://img.com/linkToIcon.png>'],
                   name: '<name>',
@@ -89,7 +89,7 @@ try {
       console.log(error);
 }
 ```
-You need to  have a WalletConnect project ID. To get one see: https://cloud.walletconnect.com/app. Also, make sure to have valid data in your metadata field, otherwise the XPortal app will show a "Unexpected Error" when redirecting to it for login.
+You need to  have a WalletConnect project ID. To get one see: https://cloud.walletconnect.com/app. Also, make sure to have valid data in your metadata key, otherwise the XPortal wallet will show a "Unexpected Error" when redirecting to it for login.
 
 ### Core
 #### Login
@@ -115,7 +115,7 @@ try {
       throw new Error(error.message);
 }
 ```
-Disconnects your app from XPortal, cleaning local connection and XPortal's.
+Disconnects your app from XPortal, cleaning the connection.
 
 
 #### Sign Transactions
@@ -133,7 +133,7 @@ try {
           gasLimit: 70000,
           data: 'Zm9vZCBmb3IgY2F0cw==',
           chainId: 'D',
-          nonce: 88,
+          nonce: 1,
           version: 1,
         }],
       // minGasLimit: 50_000 (optional)
@@ -149,7 +149,7 @@ Transactions need to be in an array, thus being able to tolerate one or many tra
 
 **Make sure all the transactions have a `chainId` and the proper `nonce` value.**
 
-Transactions will be sent to XPortal where the user can sign them an then returned back to you for any use you choose. This function DOES NOT send the transaction over the MultiversX's blockchain - a better approach would be to send the signed transaction to your back-end and let it handle the broadcast and other changes that the trasanction imposes on your system. If broadcasting the transaction functionality is needed, it will be added eventually. Please see [Contributing](#contributing) if you want to add this functionality. 
+Transactions will be sent to XPortal where the user can sign them an return them back to your app. This function DOES NOT send the transaction over the MultiversX's blockchain - a better approach would be to send the signed transaction to your back-end and let it handle the broadcast and other changes that the trasanction imposes on your system. If broadcasting the transaction functionality is needed, it will be added eventually. Please see [Contributing](#contributing) if you want to add this functionality. 
 
 
 #### Sign Message
@@ -159,7 +159,7 @@ import { XPortal } from 'react-native-xportal';
 const signedMessage = await XPortal.signMessage({message: 'Passion'});
 const signature = signedMessage.getSignature().toString('hex');
 ```
-Like signing transactions, signes a message and returns it back.
+Like signing transactions, `signMessage` signes a message and returns it back signed.
 
 ### Send Custom Request
 ```typescript
@@ -199,7 +199,7 @@ try {
       throw new Error(error.message);
 }
 ```
-Provides the ability to manually refresh the account data stored if there have been changes outside of your app.
+Provides the ability to manually refresh the account data stored if there have been changes to user's wallet outside of your app.
 
 
 #### Watch Transaction
@@ -214,7 +214,7 @@ try {
       throw new Error(error.message);
 }
 ```
-Provides the ability to watch a any transaction's status after it was sent to the MultiversX blockchain. 
+Provides the ability to watch any transaction's status after it was sent to the MultiversX blockchain. 
 
 
 #### Account Information
@@ -286,7 +286,7 @@ Here are some features that need to be implemented:
  - Transaction broadcast (if it is needed)
  - Husky for commit lint
 
-For more, see the [open issues](https://github.com/multiversx/mx-sdk-dapp/issues) for a list of proposed features known issues. Check out **Contributing** below to get started.
+For more, see the [Open Issues](https://github.com/sash20m/react-native-xportal/issues) for a list of proposed features and known issues. Check out **Contributing** below to get started.
 
 ## Contributing
 
