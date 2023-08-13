@@ -109,6 +109,7 @@ try {
           gasLimit: 70000,
           data: 'Zm9vZCBmb3IgY2F0cw==',
           chainId: 'D',
+          nonce: 88,
           version: 1,
         }],
       // minGasLimit: 50_000 (optional)
@@ -122,11 +123,9 @@ try {
 ```
 Transactions need to be in an array, thus being able to tolerate one or many transaction for signing.
 
-**Make sure all the transactions have a `chainId` or none of them have (and the one set on initialization will be used).**
+**Make sure all the transactions have a `chainId` and the proper `nonce` value.**
 
 Transactions will be sent to XPortal where the user can sign them an then returned back to you for any use you choose. This function DOES NOT send the transaction over the MultiversX's blockchain - a better approach would be to send the signed transaction to your back-end and let it handle the broadcast and other changes that the trasanction imposes on your system. If broadcasting the transaction functionality is needed, it will be added eventually. Please see [Contributing](#contributing) if you want to add this functionality. 
-
-// see nonces
 
 
 ### Sign Message
@@ -247,3 +246,11 @@ import {
 ```
 All buttons can be styled and the content inside can be changed with the `content` prop.
 
+### Props
+## Props
+
+| Prop Name  | Type     | Default | Description                   |
+|------------|----------|---------|-------------------------------|
+| content      | `type1`  | `default1` | Description of the prop1.   |
+| prop2      | `type2`  | `default2` | Description of the prop2.   |
+| ...        | ...      | ...     | ...                           |
