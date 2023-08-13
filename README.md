@@ -1,17 +1,32 @@
 # React Native XPortal
-![XPortal Logo](img/xportal.png)
+<p align="center">
+  <img src="./img/xportal.png" alt="Alternate text for image">
+</p>
 
-[![npm version](https://badge.fury.io/js/[library-name].svg)](https://badge.fury.io/js/[library-name])
-[![License](https://img.shields.io/badge/License-[License Name]-blue.svg)](https://opensource.org/licenses/[License Name])
+
+[![npm version](https://badge.fury.io/js/react-native-xportal.svg)](https://badge.fury.io/js/react-native-xportal)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 > Connecting mobile apps to the MultiversX's xPortal mobile wallet.
 
 ## Table of Contents
 
 - [Installation](#installation)
+- [Description](#description)
 - [Usage](#usage)
-- [Props](#props)
-- [Examples](#examples)
+  - [Core Functions](#core)
+    - [Login](#login)
+    - [Logout](#logout)
+    - [Sign Transaction](#SignTransactions)
+    - [Sign Message](#SignMessage)
+    - [Send Custom Request](#SendCustomRequest)
+    - [Ping](#Ping)
+    - [Refresh Account Data](#RefreshAccountData)
+    - [Watch Transaction](#WatchTransaction)
+    - [Account Information](#AccountInformation)
+  - [UI](#UI)
+    - [Props for Components](#PropsforComponents)
+- [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -67,7 +82,7 @@ try {
 ```
 You need to  have a WalletConnect project ID. To get one see: https://cloud.walletconnect.com/app. Also, make sure to have valid data in your metadata field, otherwise the XPortal app will show a "Unexpected Error" when redirecting to it for login.
 
-### Core functions
+### Core
 #### Login
 ```typescript
 import { XPortal } from 'react-native-xportal';
@@ -81,7 +96,7 @@ try {
 This will connect your app to user's XPortal app and his account.
 
 
-### Logout
+#### Logout
 ```typescript
 import { XPortal } from 'react-native-xportal';
 
@@ -94,7 +109,7 @@ try {
 Disconnects your app from XPortal, cleaning local connection and XPortal's.
 
 
-### Sign Transactions
+#### Sign Transactions
 ```typescript
 import { XPortal } from 'react-native-xportal';
 
@@ -128,7 +143,7 @@ Transactions need to be in an array, thus being able to tolerate one or many tra
 Transactions will be sent to XPortal where the user can sign them an then returned back to you for any use you choose. This function DOES NOT send the transaction over the MultiversX's blockchain - a better approach would be to send the signed transaction to your back-end and let it handle the broadcast and other changes that the trasanction imposes on your system. If broadcasting the transaction functionality is needed, it will be added eventually. Please see [Contributing](#contributing) if you want to add this functionality. 
 
 
-### Sign Message
+#### Sign Message
 ```typescript
 import { XPortal } from 'react-native-xportal';
 
@@ -152,7 +167,7 @@ try {
 Send a custom request to XPortal, method and params need to specified in relation to your needs.
 
 
-### Ping
+#### Ping
 ```typescript
 import { XPortal } from 'react-native-xportal';
 
@@ -178,7 +193,7 @@ try {
 Provides the ability to manually refresh the account data stored if there have been changes outside of your app.
 
 
-### Watch Transaction
+#### Watch Transaction
 ```typescript
 import { XPortal } from 'react-native-xportal';
 
@@ -193,7 +208,7 @@ try {
 Provides the ability to watch a any transaction's status after it was sent to the MultiversX blockchain. 
 
 
-### Check Account Info functions
+#### Account Information
 ```typescript
 import { XPortal } from 'react-native-xportal';
 
@@ -205,7 +220,7 @@ const balance = XPortal.getAccountBalance();
 ```
 Provides different information about the state of the account.
 
-## UI
+### UI
 You can see below an example with all the UI components currently provided.
 ```jsx
 import {
@@ -245,7 +260,7 @@ import {
 />
 ```
 All buttons can be styled and the content inside can be changed with the `content` prop.
-#### Props for components
+#### Props for Components
 | Prop Name    | Type                  | Available for    | Description                   |
 |--------------|-----------------------|------------------|-------------------------------|
 | content      | `React.ReactElement`  | All components   | Replaces the content of the button.   |
