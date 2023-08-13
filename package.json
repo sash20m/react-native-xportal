@@ -73,7 +73,7 @@
     "react-native-builder-bob": "^0.21.3"
   },
   "peerDependencies": {
-    "react": "^17.0.0",
+    "react": "=>17.0.0",
     "react-native": ">=0.70.0"
   },
   "description": "A library that connects a mobile app to the MultiversX's xPortal mobile wallet.",
