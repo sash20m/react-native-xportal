@@ -1,9 +1,9 @@
-# [Library Name]
+# [React Native XPortal]
 
 [![npm version](https://badge.fury.io/js/[library-name].svg)](https://badge.fury.io/js/[library-name])
 [![License](https://img.shields.io/badge/License-[License Name]-blue.svg)](https://opensource.org/licenses/[License Name])
 
-A short description of what your library does.
+A library that connects a mobile app to the MultiversX's xPortal mobile wallet.
 
 ![Demo or Library Screenshot](path-to-screenshot.png)
 
@@ -19,4 +19,9 @@ A short description of what your library does.
 ## Installation
 
 ```bash
-npm install [library-name] --save
+npm install react-native-xportal
+```
+or 
+```bash
+yarn add react-native-xportal
+```
