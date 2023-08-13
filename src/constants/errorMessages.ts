@@ -15,4 +15,5 @@ export enum ERROR_MESSAGES {
   FAILED_REFRESH_ACCOUNT = 'Account failed to refresh',
   WATCHER_ERROR = 'Error while watching the transaction',
   XPORTAL_OPEN_FAIL = 'Could not open XPortal app. Please redirect manually',
+  TX_WITHOUT_NONCE = 'At least one transaction does not have a nonce.',
 }

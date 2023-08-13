@@ -194,6 +194,12 @@ class XPortal {
         (tx) => Object.getPrototypeOf(tx).toPlainObject != null
       );
       let txToSign = transactionsPayload;
+
+      const hasNonces = txToSign.every((tx) => 'nonce' in tx);
+      if (!hasNonces) {
+        throw new Error(ERROR_MESSAGES.TX_WITHOUT_NONCE);
+      }
+
       if (!areComplexTransactions) {
         txToSign = await createSignableTransactions(transactions as SimpleTransactionType[]);
       }
