@@ -1,11 +1,10 @@
 {
   "name": "react-native-xportal",
   "author": "sash20m",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
   "types": "lib/typescript/index.d.ts",
-  "react-native": "src/index.ts",
   "scripts": {
     "prepack": "bob build",
     "test": "echo \"No test specified\""
@@ -17,6 +16,7 @@
     "@react-native-async-storage/async-storage": "^1.19.0",
     "@reduxjs/toolkit": "^1.8.3",
     "@tradle/react-native-http": "^2.0.0",
+    "@tsconfig/react-native": "^3.0.2",
     "@walletconnect/client": "^1.8.0",
     "@walletconnect/encoding": "^1.0.2",
     "@walletconnect/react-native-compat": "^2.9.0",
@@ -35,7 +35,7 @@
     "redux": "^4.2.1",
     "redux-persist": "^6.0.0",
     "text-encoding": "^0.7.0",
-    "typescript": "*"
+    "typescript": "^5.1.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -48,9 +48,9 @@
     "react-native-builder-bob": "^0.21.3"
   },
   "peerDependencies": {
+    "@react-native-async-storage/async-storage": ">=1.19.0",
     "react": ">=17.0.0",
     "react-native": ">=0.70.0",
-    "@react-native-async-storage/async-storage": ">=1.19.0",
     "react-native-get-random-values": ">=1.9.0"
   },
   "description": "A library that connects a mobile app to the MultiversX's xPortal mobile wallet.",
@@ -66,11 +66,7 @@
   ],
   "license": "MIT",
   "files": [
-    "src",
-    "lib",
-    "!**/__tests__",
-    "!**/__fixtures__",
-    "!**/__mocks__"
+    "lib"
   ],
   "react-native-builder-bob": {
     "source": "src",
@@ -84,5 +80,10 @@
   "eslintIgnore": [
     "node_modules/",
     "lib/"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sash20m/react-native-xportal"
+  },
+  "homepage": "https://github.com/sash20m/react-native-xportal#readme"
 }

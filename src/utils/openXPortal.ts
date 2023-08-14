@@ -15,12 +15,12 @@ export const openXPortalForLogin = (connectorUri: string | undefined): void => {
     const encodedSchemaUrl = getEncodedXPortalLoginSchemaUrl(connectorUri);
 
     Linking.canOpenURL(encodedSchemaUrl)
-      .then((supported) => {
+      .then((supported: boolean) => {
         if (supported || Platform.OS === 'android') {
           return Linking.openURL(encodedSchemaUrl);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err: any) => console.log(err));
   } catch (error) {
     throw new Error(
       errorComposer({
@@ -39,12 +39,12 @@ export const openXPortal = () => {
   try {
     const encodedSchemaUrl = getXPortalSchemaUrl();
     Linking.canOpenURL(encodedSchemaUrl)
-      .then((supported) => {
+      .then((supported: boolean) => {
         if (supported || Platform.OS === 'android') {
           return Linking.openURL(encodedSchemaUrl);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err: any) => console.log(err));
   } catch (error) {
     throw new Error(
       errorComposer({
