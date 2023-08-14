@@ -1,7 +1,7 @@
 # React Native XPortal
 
 <p align="center">
-  <img src="./img/xportal.png" alt="Alternate text for image">
+  <img src="./img/xportal.png" alt="XPortal Logo">
 </p>
 
 <p align="center">
