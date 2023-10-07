@@ -69,7 +69,7 @@ const callbacks = {
       onClientLogout: async () => {
             console.log('on logout');
       },
-onClientEvent: async (event: any) => {
+      onClientEvent: async (event: any) => {
             console.log('event -> ', event);
       },
 };
@@ -195,7 +195,7 @@ Returns a `Boolean` to reflect the state of the connection with the XPortal.
 import { XPortal } from 'react-native-xportal';
 
 try {
-      const isActive = await XPortal.refreshAccountData();
+      const accountData = await XPortal.refreshAccountData();
 } (error: any) {
       throw new Error(error.message);
 }
